@@ -10,7 +10,7 @@ create table TAIKHOAN
    TENDANGNHAP          varchar(20) not null,
    MATKHAU              varchar(20),
    primary key (TENDANGNHAP)
-);
+) default charset = utf8mb4;;
 
 /*==============================================================*/
 /* Table: NHANVIEN                                        */
@@ -27,7 +27,7 @@ create table NHANVIEN
    NGAYVL               date,
    SODT                 char(12),
    primary key (MANV)
-);
+) default charset = utf8mb4;;
 
 /*==============================================================*/
 /* Table: KHACHHANG                                       */
@@ -41,7 +41,7 @@ create table KHACHHANG
    EMAIL                varchar(50),
    GIOITINH             char(5),
    primary key (MAKH)
-);
+) default charset = utf8mb4;
 
 /*==============================================================*/
 /* Table: SANPHAM                                         */
@@ -141,7 +141,7 @@ create table SUKIEN
    NGAYBD               date,
    NGAYKT               date,
    primary key (MASK)
-);
+) default charset = utf8mb4;
 
 
 /*==============================================================*/
@@ -152,7 +152,7 @@ create table DANHMUCSANPHAM
    MADM                 char(6) not null,
    TENDM                varchar(50),
    primary key (MADM)
-);
+) default charset = utf8mb4;
 
 /*==============================================================*/
 /* Table:HOADON                                          */
@@ -168,7 +168,7 @@ create table HOADON
    TONGTIEN             int,
    THANHTIEN            int,
    primary key (MAHD)
-);
+) default charset = utf8mb4;
 
 /*==============================================================*/
 /* Table: CTHD                                            */
