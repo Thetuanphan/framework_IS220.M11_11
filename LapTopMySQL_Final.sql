@@ -10,7 +10,7 @@ create table TAIKHOAN
    TENDANGNHAP          varchar(20) not null,
    MATKHAU              varchar(20),
    primary key (TENDANGNHAP)
-) default charset = utf8mb4;;
+) default charset = utf8mb4;
 
 /*==============================================================*/
 /* Table: NHANVIEN                                        */
@@ -27,7 +27,7 @@ create table NHANVIEN
    NGAYVL               date,
    SODT                 char(12),
    primary key (MANV)
-) default charset = utf8mb4;;
+) default charset = utf8mb4;
 
 /*==============================================================*/
 /* Table: KHACHHANG                                       */
