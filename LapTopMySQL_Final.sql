@@ -2,6 +2,8 @@
 use laptop;*/
 ------------- Table ---------------
 
+use LapTop;
+
 /*==============================================================*/
 /* Table: TAIKHOAN                 		                        */
 /*==============================================================*/
@@ -219,7 +221,7 @@ alter table _CODE_SANPHAM add constraint FK_THUOC4 foreign key (MANHINH)
 alter table _CODE_SANPHAM add constraint FK_THUOC5 foreign key (BOXULY)
       references _CODE_BOXULY (MABXL) on delete restrict on update restrict;
 
-alter table _CODE_SANPHAM add constraint FK_THUOC6 foreign key ()
+alter table _CODE_SANPHAM add constraint FK_THUOC6 foreign key (CONGKETNOI)
       references _CODE_CONGKETNOI (MACKN) on delete restrict on update restrict;
 
 commit;
