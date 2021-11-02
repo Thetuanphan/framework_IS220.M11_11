@@ -34,10 +34,7 @@ namespace DoAn_CuaHangLaptop.Models
 
         public string MaHD { get => maHD; set => maHD = value; }
         public string MaKH { get => maKH; set => maKH = value; }
-        public int SoLuong { get => soLuong; set => soLuong = value; }
-        public string MauSac { get => mauSac; set => mauSac = value; }
-        public string CPU { get => cPU; set => cPU = value; }
-        public string RAM { get => rAM; set => rAM = value; }
+
     }
 
     
