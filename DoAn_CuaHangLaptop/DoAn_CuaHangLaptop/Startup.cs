@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DoAn_CuaHangLaptop.Models;
 
 namespace DoAn_CuaHangLaptop
 {
@@ -24,10 +23,7 @@ namespace DoAn_CuaHangLaptop
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddControllersWithViews();
-            services.AddMvc();
-            services.Add(new ServiceDescriptor(typeof(LapTopContext), new LapTopContext(Configuration.GetConnectionString("DefaultConnection"))));
-
+            services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
