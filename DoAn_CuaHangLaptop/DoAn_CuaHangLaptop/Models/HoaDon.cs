@@ -34,11 +34,15 @@ namespace DoAn_CuaHangLaptop.Models
 
         public string MaHD { get => maHD; set => maHD = value; }
         public string MaKH { get => maKH; set => maKH = value; }
-        public int SoLuong { get => soLuong; set => soLuong = value; }
-        public string MauSac { get => mauSac; set => mauSac = value; }
-        public string CPU { get => cPU; set => cPU = value; }
-        public string RAM { get => rAM; set => rAM = value; }
+        public string MaNV { get => maNV; set => maNV = value; }
+        public string MaSK { get => maSK; set => maSK = value; }
+        public string NgayHD { get => ngayHD; set => ngayHD = value; }
+        public string DiaChiGiaoHang { get => diaChiGiaoHang; set => diaChiGiaoHang = value; }
+        public long TongTien { get => tongTien; set => tongTien = value; }
+        public long ThanhTien { get => thanhTien; set => thanhTien = value; }
+
+
     }
 
-    
+
 }
