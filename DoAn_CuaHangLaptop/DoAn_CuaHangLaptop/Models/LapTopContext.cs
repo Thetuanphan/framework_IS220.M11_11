@@ -21,7 +21,5 @@ namespace DoAn_CuaHangLaptop.Models
         {
             return new MySqlConnection(ConnectionString);
         }
-
-        //test thử nè
     }
 }
