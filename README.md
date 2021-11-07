@@ -5,5 +5,8 @@
 - Tên hàm, phương thức, tên biến: camelCase (VD: layDuLieu, tenKhachHang)
 - Hằng số: underscore (VD: PHAN_TRAM_THUE)
 
-- Link deploy:
+- Link deploy Azure:
 https://cuahanglaptop.azurewebsites.net
+
+- Link deploy heroku (builpack: https://github.com/jincod/dotnetcore-buildpack):
+https://cuahanglaptop.herokuapp.com/
