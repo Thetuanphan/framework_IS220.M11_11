@@ -6,4 +6,4 @@
 - Hằng số: underscore (VD: PHAN_TRAM_THUE)
 
 - Link deploy:
-https://doancuahanglaptop20211105130422.azurewebsites.net/
+https://cuahanglaptop.azurewebsites.net
