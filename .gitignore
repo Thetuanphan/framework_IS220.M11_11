@@ -73,3 +73,5 @@ DoAn_CuaHangLaptop/DoAn_CuaHangLaptop/Properties/PublishProfiles/DoAnCuaHangLapt
 DoAn_CuaHangLaptop/DoAn_CuaHangLaptop/Properties/ServiceDependencies/CuaHangLaptop - Web Deploy/profile.arm.json
 DoAn_CuaHangLaptop/DoAn_CuaHangLaptop/Properties/ServiceDependencies/DoAnCuaHangLaptop20211105130422 - Web Deploy/profile.arm.json
 DoAn_CuaHangLaptop/DoAn_CuaHangLaptop/Properties/ServiceDependencies/DoAnCuaHangLaptop20211105130422 - Web Deploy/profile.arm.json
+DoAn_CuaHangLaptop/DoAn_CuaHangLaptop/obj/Debug/netcoreapp3.1/Razor/Views/Home/Signin.cshtml.g.cs
+DoAn_CuaHangLaptop/DoAn_CuaHangLaptop/obj/Debug/netcoreapp3.1/Razor/Views/Home/Signup.cshtml.g.cs
