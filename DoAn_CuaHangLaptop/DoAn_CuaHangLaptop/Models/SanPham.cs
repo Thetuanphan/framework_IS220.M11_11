@@ -12,7 +12,7 @@ namespace DoAn_CuaHangLaptop.Models
         string tenSP;
         int soLuong;
         string mauSac;
-        string boXuLy;
+        string cPU;
         string rAM;
         string oCung;
         string manHinh;
@@ -34,13 +34,13 @@ namespace DoAn_CuaHangLaptop.Models
         {
         }
 
-        public SanPham(string maSP, string tenSP, int soLuong, string mauSac, string boXuLy, string rAM, string oCung, string manHinh, string cardMH, string congKN, string dacBiet, string hDH, string thietKe, string kichThuoc_TrongLuong, string webcam, string pin, int raMat, string moTa, long donGia, string hinhAnh, string danhMuc)
+        public SanPham(string maSP, string tenSP, int soLuong, string mauSac, string cPU, string rAM, string oCung, string manHinh, string cardMH, string congKN, string dacBiet, string hDH, string thietKe, string kichThuoc_TrongLuong, string webcam, string pin, int raMat, string moTa, long donGia, string hinhAnh, string danhMuc)
         {
             this.MaSP = maSP;
             this.TenSP = tenSP;
             this.SoLuong = soLuong;
             this.MauSac = mauSac;
-            this.BoXuLy = boXuLy;
+            this.CPU = cPU;
             this.RAM = rAM;
             this.OCung = oCung;
             this.ManHinh = manHinh;
@@ -73,7 +73,7 @@ namespace DoAn_CuaHangLaptop.Models
         public string MauSac { get => mauSac; set => mauSac = value; }
         [Required]
         [Display(Name = "CPU")]
-        public string BoXuLy { get => boXuLy; set => boXuLy = value; }
+        public string CPU { get => cPU; set => cPU = value; }
         [Required]
         [Display(Name = "RAM")]
         public string RAM { get => rAM; set => rAM = value; }
