@@ -21,9 +21,6 @@ namespace DoAn_CuaHangLaptop.Models
         {
             return new MySqlConnection(ConnectionString);
         }
-
-        //test thử nè...
-
         //DANH MUC MODEL
         public List<DanhMuc> LayDSDanhMuc()
         {
@@ -77,9 +74,9 @@ namespace DoAn_CuaHangLaptop.Models
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                string query = "insert into DanhMucSanPham value(?madm, ?tendm) ";//ON DUPLICATE KEY UPDATE madm = ?madm
+                string query = "insert into DanhMucSanPham values(?madm, ?tendm) ";//ON DUPLICATE KEY UPDATE madm = ?madm
                 MySqlCommand cmd = new MySqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("madm", dm.MaDM.ToString());
+                cmd.Parameters.AddWithValue("madm", "");
                 cmd.Parameters.AddWithValue("tendm", dm.TenDM.ToString());
                 cmd.ExecuteNonQuery();
                 count++;
@@ -97,7 +94,6 @@ namespace DoAn_CuaHangLaptop.Models
                 string query = "update DanhMucSanPham set tendm=@tendm where madm = @madm";
                 MySqlCommand cmd = new MySqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@madm", madm);
-                cmd.Parameters.AddWithValue("madm", dm.MaDM.ToString());
                 cmd.Parameters.AddWithValue("tendm", dm.TenDM.ToString());
                 cmd.ExecuteNonQuery();
                 count++;
@@ -113,7 +109,7 @@ namespace DoAn_CuaHangLaptop.Models
                 conn.Open();
                 string query = "delete from DanhMucSanPham where madm = @madm ";
                 MySqlCommand cmd = new MySqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@makh", madm); //Binding
+                cmd.Parameters.AddWithValue("@madm", madm); //Binding
                 cmd.ExecuteNonQuery();
                 count++;
             }
@@ -121,7 +117,7 @@ namespace DoAn_CuaHangLaptop.Models
         }
 
         // BO NHO RAM MODEL
-        public List<BoNhoRAM>   LayDSBoNhoRAM()
+        public List<BoNhoRAM> LayDSBoNhoRAM()
         {
             List<BoNhoRAM> list = new List<BoNhoRAM>();
             using (MySqlConnection conn = GetConnection())
@@ -135,11 +131,11 @@ namespace DoAn_CuaHangLaptop.Models
                     {
                         list.Add(new BoNhoRAM()
                         {
-                            MaRAM = reader["MARAM"].ToString(),
-                            DungLuongRAM = reader["DUNGLUONGRAM"].ToString(),
-                            LoaiRAM = reader["loairam"].ToString(),
-                            BusRAM = reader["BUSRAM"].ToString(),
-                            HoTroToiDa = reader["HOTROTOIDA"].ToString(),
+                            MaRAM = reader["MARAM"]?.ToString(),
+                            DungLuongRAM = reader["DUNGLUONGRAM"]?.ToString(),
+                            LoaiRAM = reader["loairam"]?.ToString(),
+                            BusRAM = reader["BUSRAM"]?.ToString(),
+                            HoTroToiDa = reader["HOTROTOIDA"]?.ToString(),
                         });
 
                     }
@@ -157,16 +153,17 @@ namespace DoAn_CuaHangLaptop.Models
                 conn.Open();
                 string query = "select * from BoNhoRAM where maram =@maram";
                 MySqlCommand cmd = new MySqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@makh", maram);
+                cmd.Parameters.AddWithValue("@maram", maram);
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
                         BNR.MaRAM = reader["MARAM"].ToString();
-                        BNR.DungLuongRAM = reader["DUNGLUONGRAM"].ToString();
-                        BNR.LoaiRAM = reader["LOAIRAM"].ToString();
-                        BNR.BusRAM = reader["HOTROTOIDA"].ToString();
-                        BNR.HoTroToiDa = reader["email"].ToString();
+                        BNR.DungLuongRAM = reader["DUNGLUONGRAM"]?.ToString();
+                        BNR.LoaiRAM = reader["LOAIRAM"]?.ToString();
+                        BNR.BusRAM = reader["BUSRAM"]?.ToString();
+                        BNR.HoTroToiDa = reader["HOTROTOIDA"]?.ToString();
+
                     };
 
                 }
@@ -182,11 +179,11 @@ namespace DoAn_CuaHangLaptop.Models
                 conn.Open();
                 string query = "insert into bonhoram value(?maram, ?dungluongram, ?loairam, ?busram, ?hotrotoida) ";//ON DUPLICATE KEY UPDATE maram = ?maram
                 MySqlCommand cmd = new MySqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("maram", bnr.MaRAM.ToString());
-                cmd.Parameters.AddWithValue("dungluongram", bnr.DungLuongRAM.ToString());
-                cmd.Parameters.AddWithValue("loairam", bnr.LoaiRAM.ToString());
-                cmd.Parameters.AddWithValue("busram", bnr.BusRAM.ToString());
-                cmd.Parameters.AddWithValue("hotrotoida", bnr.HoTroToiDa.ToString());
+                cmd.Parameters.AddWithValue("maram", "");
+                cmd.Parameters.AddWithValue("dungluongram", bnr.DungLuongRAM?.ToString());
+                cmd.Parameters.AddWithValue("loairam", bnr.LoaiRAM?.ToString());
+                cmd.Parameters.AddWithValue("busram", bnr.BusRAM?.ToString());
+                cmd.Parameters.AddWithValue("hotrotoida", bnr.HoTroToiDa?.ToString());
                 cmd.ExecuteNonQuery();
                 count++;
             }
@@ -203,11 +200,10 @@ namespace DoAn_CuaHangLaptop.Models
                 string query = "update bonhoram set dungluongram=@dungluongram, loairam =@loairam, busram=@busram, hotrotoida =@hotrotoida where maram = @maram";
                 MySqlCommand cmd = new MySqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@maram", maram);
-                cmd.Parameters.AddWithValue("maram", bnr.MaRAM.ToString());
-                cmd.Parameters.AddWithValue("dungluongram", bnr.DungLuongRAM.ToString());
-                cmd.Parameters.AddWithValue("loairam", bnr.LoaiRAM.ToString());
-                cmd.Parameters.AddWithValue("busram", bnr.BusRAM.ToString());
-                cmd.Parameters.AddWithValue("hotrotoida", bnr.HoTroToiDa.ToString());
+                cmd.Parameters.AddWithValue("dungluongram", bnr.DungLuongRAM?.ToString());
+                cmd.Parameters.AddWithValue("loairam", bnr.LoaiRAM?.ToString());
+                cmd.Parameters.AddWithValue("busram", bnr.BusRAM?.ToString());
+                cmd.Parameters.AddWithValue("hotrotoida", bnr.HoTroToiDa?.ToString());
                 cmd.ExecuteNonQuery();
                 count++;
             }
@@ -246,12 +242,12 @@ namespace DoAn_CuaHangLaptop.Models
                         list.Add(new BoXuLy()
                         {
                             MaBXL = reader["MABXL"].ToString(),
-                            CongNgheCPU = reader["CONGNGHECPU"].ToString(),
+                            CongNgheCPU = reader["CONGNGHECPU"]?.ToString(),
                             SoNhan = Convert.ToInt32(reader["SONHAN"]),
                             SoLuong = Convert.ToInt32(reader["SOLUONG"]),
-                            TocDoCPU = reader["TocDoCPU"].ToString(),
-                            TocDoToiDa = reader["TocDoToiDa"].ToString(),
-                            BoNhoDem = reader["BoNhoDem"].ToString(),
+                            TocDoCPU = reader["TocDoCPU"]?.ToString(),
+                            TocDoToiDa = reader["TocDoToiDa"]?.ToString(),
+                            BoNhoDem = reader["BoNhoDem"]?.ToString(),
                         });
 
                     }
@@ -275,12 +271,12 @@ namespace DoAn_CuaHangLaptop.Models
                     while (reader.Read())
                     {
                         BXL.MaBXL = reader["MABXL"].ToString();
-                        BXL.CongNgheCPU = reader["CONGNGHECPU"].ToString();
+                        BXL.CongNgheCPU = reader["CONGNGHECPU"]?.ToString();
                         BXL.SoNhan = Convert.ToInt32(reader["SONHAN"]);
                         BXL.SoLuong = Convert.ToInt32(reader["SOLUONG"]);
-                        BXL.TocDoCPU = reader["TocDoCPU"].ToString();
-                        BXL.TocDoToiDa = reader["TocDoToiDa"].ToString();
-                        BXL.BoNhoDem = reader["BoNhoDem"].ToString();
+                        BXL.TocDoCPU = reader["TocDoCPU"]?.ToString();
+                        BXL.TocDoToiDa = reader["TocDoToiDa"]?.ToString();
+                        BXL.BoNhoDem = reader["BoNhoDem"]?.ToString();
                     };
 
                 }
@@ -296,13 +292,13 @@ namespace DoAn_CuaHangLaptop.Models
                 conn.Open();
                 string query = "insert into BoXuLy value(?mabxl, ?congnghecpu, ?sonhan, ?soluong, ?tocdocpu, ?tocdotoida, ?bonhodem) ";//ON DUPLICATE KEY UPDATE mabxl = ?mabxl
                 MySqlCommand cmd = new MySqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("mabxl", bxl.MaBXL.ToString());
-                cmd.Parameters.AddWithValue("congnghecpu", bxl.CongNgheCPU.ToString());
+                cmd.Parameters.AddWithValue("mabxl", "");
+                cmd.Parameters.AddWithValue("congnghecpu", bxl.CongNgheCPU?.ToString());
                 cmd.Parameters.AddWithValue("sonhan", Convert.ToInt32(bxl.SoNhan));
                 cmd.Parameters.AddWithValue("soluong", Convert.ToInt32(bxl.SoLuong));
-                cmd.Parameters.AddWithValue("tocdocpu", bxl.TocDoCPU.ToString());
-                cmd.Parameters.AddWithValue("tocdotoida", bxl.TocDoToiDa.ToString());
-                cmd.Parameters.AddWithValue("bonhodem", bxl.BoNhoDem.ToString());
+                cmd.Parameters.AddWithValue("tocdocpu", bxl.TocDoCPU?.ToString());
+                cmd.Parameters.AddWithValue("tocdotoida", bxl.TocDoToiDa?.ToString());
+                cmd.Parameters.AddWithValue("bonhodem", bxl.BoNhoDem?.ToString());
                 cmd.ExecuteNonQuery();
                 count++;
             }
@@ -319,13 +315,12 @@ namespace DoAn_CuaHangLaptop.Models
                 string query = "update BoXuLy set congnghecpu=@congnghecpu, sonhan =@sonhan, soluong=@soluong, tocdocpu =@tocdocpu, tocdotoida=@tocdotoida, bonhodem=@bonhodem where mabxl = @mabxl";
                 MySqlCommand cmd = new MySqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@mabxl", mabxl);
-                cmd.Parameters.AddWithValue("mabxl", bxl.MaBXL.ToString());
-                cmd.Parameters.AddWithValue("congnghecpu", bxl.CongNgheCPU.ToString());
+                cmd.Parameters.AddWithValue("congnghecpu", bxl.CongNgheCPU?.ToString());
                 cmd.Parameters.AddWithValue("sonhan", Convert.ToInt32(bxl.SoNhan));
                 cmd.Parameters.AddWithValue("soluong", Convert.ToInt32(bxl.SoLuong));
-                cmd.Parameters.AddWithValue("tocdocpu", bxl.TocDoCPU.ToString());
-                cmd.Parameters.AddWithValue("tocdotoida", bxl.TocDoToiDa.ToString());
-                cmd.Parameters.AddWithValue("bonhodem", bxl.BoNhoDem.ToString());
+                cmd.Parameters.AddWithValue("tocdocpu", bxl.TocDoCPU?.ToString());
+                cmd.Parameters.AddWithValue("tocdotoida", bxl.TocDoToiDa?.ToString());
+                cmd.Parameters.AddWithValue("bonhodem", bxl.BoNhoDem?.ToString());
                 cmd.ExecuteNonQuery();
                 count++;
             }
@@ -348,17 +343,6 @@ namespace DoAn_CuaHangLaptop.Models
         }
 
         //CONG KET NOI MODEL CongKetNoi
-        /*create table CONGKETNOI
-        (
-           MACKN                char(5) not null,
-           CONGGIAOTIEP varchar(200),
-           KETNOIKHONGDAY varchar(100),
-           KHEDOCTHENHO varchar(20),
-           WEBCAM varchar(50),
-           TINHNANGKHAC varchar(200),
-           DENBANPHIM varchar(10),
-           primary key(MACKN)
-        ) DEFAULT CHARSET = utf8mb4;*/
 
         public List<CongKetNoi> LayDSCongKetNoi()
         {
@@ -375,12 +359,12 @@ namespace DoAn_CuaHangLaptop.Models
                         list.Add(new CongKetNoi()
                         {
                             MaCKN = reader["MACKN"].ToString(),
-                            CongGiaoTiep = reader["CONGGIAOTIEP"].ToString(),
-                            KetNoiKhongDay = reader["KETNOIKHONGDAY"].ToString(),
-                            KheDocTheNho = reader["KHEDOCTHENHO"].ToString(),
-                            WebCam = reader["WEBCAM"].ToString(),
-                            TinhNangKhac = reader["TINHNANGKHAC"].ToString(),
-                            DenBanPhim = reader["DENBANPHIM"].ToString(),
+                            CongGiaoTiep = reader["CONGGIAOTIEP"]?.ToString(),
+                            KetNoiKhongDay = reader["KETNOIKHONGDAY"]?.ToString(),
+                            KheDocTheNho = reader["KHEDOCTHENHO"]?.ToString(),
+                            WebCam = reader["WEBCAM"]?.ToString(),
+                            TinhNangKhac = reader["TINHNANGKHAC"]?.ToString(),
+                            DenBanPhim = reader["DENBANPHIM"]?.ToString(),
                         });
 
                     }
@@ -404,12 +388,12 @@ namespace DoAn_CuaHangLaptop.Models
                     while (reader.Read())
                     {
                         CKN.MaCKN = reader["MACKN"].ToString();
-                        CKN.CongGiaoTiep = reader["CONGGIAOTIEP"].ToString();
-                        CKN.KetNoiKhongDay = reader["KETNOIKHONGDAY"].ToString();
-                        CKN.KheDocTheNho = reader["KHEDOCTHENHO"].ToString();
-                        CKN.WebCam = reader["WEBCAM"].ToString();
-                        CKN.TinhNangKhac = reader["TINHNANGKHAC"].ToString();
-                        CKN.DenBanPhim = reader["DENBANPHIM"].ToString();
+                        CKN.CongGiaoTiep = reader["CONGGIAOTIEP"]?.ToString();
+                        CKN.KetNoiKhongDay = reader["KETNOIKHONGDAY"]?.ToString();
+                        CKN.KheDocTheNho = reader["KHEDOCTHENHO"]?.ToString();
+                        CKN.WebCam = reader["WEBCAM"]?.ToString();
+                        CKN.TinhNangKhac = reader["TINHNANGKHAC"]?.ToString();
+                        CKN.DenBanPhim = reader["DENBANPHIM"]?.ToString();
                     };
 
                 }
@@ -425,13 +409,17 @@ namespace DoAn_CuaHangLaptop.Models
                 conn.Open();
                 string query = "insert into CongKetNoi value(?mackn, ?conggiaotiep, ?ketnoikhongday, ?khedocthenho, ?webcam, ?tinhnangkhac, ?denbanphim) ";//ON DUPLICATE KEY UPDATE mackn = ?mackn
                 MySqlCommand cmd = new MySqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("mackn", ckn.MaCKN.ToString());
-                cmd.Parameters.AddWithValue("conggiaotiep", ckn.CongGiaoTiep.ToString());
-                cmd.Parameters.AddWithValue("ketnoikhongday", ckn.KetNoiKhongDay.ToString());
-                cmd.Parameters.AddWithValue("khedocthenho", ckn.KheDocTheNho.ToString());
-                cmd.Parameters.AddWithValue("webcam", ckn.WebCam.ToString());
-                cmd.Parameters.AddWithValue("tinhnangkhac", ckn.TinhNangKhac.ToString());
-                cmd.Parameters.AddWithValue("denbanphim", ckn.DenBanPhim.ToString());
+                cmd.Parameters.AddWithValue("mackn", "");
+                cmd.Parameters.AddWithValue("conggiaotiep", ckn.CongGiaoTiep?.ToString());
+                cmd.Parameters.AddWithValue("ketnoikhongday", ckn.KetNoiKhongDay?.ToString());
+
+                cmd.Parameters.AddWithValue("khedocthenho", ckn.KheDocTheNho?.ToString());
+
+                cmd.Parameters.AddWithValue("webcam", ckn.WebCam?.ToString());
+
+                cmd.Parameters.AddWithValue("tinhnangkhac", ckn.TinhNangKhac?.ToString());
+
+                cmd.Parameters.AddWithValue("denbanphim", ckn.DenBanPhim?.ToString());
                 cmd.ExecuteNonQuery();
                 count++;
             }
@@ -448,13 +436,12 @@ namespace DoAn_CuaHangLaptop.Models
                 string query = "update CongKetNoi set conggiaotiep=@conggiaotiep, ketnoikhongday =@ketnoikhongday, khedocthenho=@khedocthenho, webcam =@webcam, tinhnangkhac=@tinhnangkhac, denbanphim=@denbanphim where mackn = @mackn";
                 MySqlCommand cmd = new MySqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@mackn", mackn);
-                cmd.Parameters.AddWithValue("mackn", ckn.MaCKN.ToString());
-                cmd.Parameters.AddWithValue("conggiaotiep", ckn.CongGiaoTiep.ToString());
-                cmd.Parameters.AddWithValue("ketnoikhongday", ckn.KetNoiKhongDay.ToString());
-                cmd.Parameters.AddWithValue("khedocthenho", ckn.KheDocTheNho.ToString());
-                cmd.Parameters.AddWithValue("webcam", ckn.WebCam.ToString());
-                cmd.Parameters.AddWithValue("tinhnangkhac", ckn.TinhNangKhac.ToString());
-                cmd.Parameters.AddWithValue("denbanphim", ckn.DenBanPhim.ToString());
+                cmd.Parameters.AddWithValue("conggiaotiep", ckn.CongGiaoTiep?.ToString());
+                cmd.Parameters.AddWithValue("ketnoikhongday", ckn.KetNoiKhongDay?.ToString());
+                cmd.Parameters.AddWithValue("khedocthenho", ckn.KheDocTheNho?.ToString());
+                cmd.Parameters.AddWithValue("webcam", ckn.WebCam?.ToString());
+                cmd.Parameters.AddWithValue("tinhnangkhac", ckn.TinhNangKhac?.ToString());
+                cmd.Parameters.AddWithValue("denbanphim", ckn.DenBanPhim?.ToString());
                 cmd.ExecuteNonQuery();
                 count++;
             }
@@ -477,17 +464,6 @@ namespace DoAn_CuaHangLaptop.Models
         }
 
         //MAN HINH MODEL ManHinh
-        /*create table MANHINH
-        (
-           MAMH                 char(5) not null,
-           KICHTHUOC            varchar(20),
-           DOPHANGIAI           varchar(50),
-           TANSOQUET            varchar(10),
-           CONGNGHEMH           varchar(100),
-           CAMUNG               varchar(10),
-           primary key (MAMH)
-        )DEFAULT CHARSET=utf8mb4;
-        */
 
         public List<ManHinh> LayDSManHinh()
         {
@@ -505,10 +481,10 @@ namespace DoAn_CuaHangLaptop.Models
                         {
                             MaMH = reader["MAMH"].ToString(),
                             KichThuoc = reader["KICHTHUOC"].ToString(),
-                            DoPhanGiai = reader["DOPHANGIAI"].ToString(),
-                            TanSoQuet = reader["TANSOQUET"].ToString(),
-                            CongNgheMH = reader["CONGNGHEMH"].ToString(),
-                            CamUng = reader["CAMUNG"].ToString(),
+                            DoPhanGiai = reader["DOPHANGIAI"]?.ToString(),
+                            TanSoQuet = reader["TANSOQUET"]?.ToString(),
+                            CongNgheMH = reader["CONGNGHEMH"]?.ToString(),
+                            CamUng = reader["CAMUNG"]?.ToString(),
                         });
 
                     }
@@ -533,10 +509,10 @@ namespace DoAn_CuaHangLaptop.Models
                     {
                         MH.MaMH = reader["MAMH"].ToString();
                         MH.KichThuoc = reader["KICHTHUOC"].ToString();
-                        MH.DoPhanGiai = reader["DOPHANGIAI"].ToString();
-                        MH.TanSoQuet = reader["TANSOQUET"].ToString();
-                        MH.CongNgheMH = reader["CONGNGHEMH"].ToString();
-                        MH.CamUng = reader["CAMUNG"].ToString();
+                        MH.DoPhanGiai = reader["DOPHANGIAI"]?.ToString();
+                        MH.TanSoQuet = reader["TANSOQUET"]?.ToString();
+                        MH.CongNgheMH = reader["CONGNGHEMH"]?.ToString();
+                        MH.CamUng = reader["CAMUNG"]?.ToString();
                     };
 
                 }
@@ -552,12 +528,12 @@ namespace DoAn_CuaHangLaptop.Models
                 conn.Open();
                 string query = "insert into manhinh value(?mamh, ?kichthuoc, ?dophangiai, ?tansoquet, ?congnghemh, ?camung) ";//ON DUPLICATE KEY UPDATE mamh = ?mamh
                 MySqlCommand cmd = new MySqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("mamh", mh.MaMH.ToString());
+                cmd.Parameters.AddWithValue("mamh", "");
                 cmd.Parameters.AddWithValue("kichthuoc", mh.KichThuoc.ToString());
-                cmd.Parameters.AddWithValue("dophangiai", mh.DoPhanGiai.ToString());
-                cmd.Parameters.AddWithValue("tansoquet", mh.TanSoQuet.ToString());
-                cmd.Parameters.AddWithValue("congnghemh", mh.CongNgheMH.ToString());
-                cmd.Parameters.AddWithValue("camung", mh.CamUng.ToString());
+                cmd.Parameters.AddWithValue("dophangiai", mh.DoPhanGiai?.ToString());
+                cmd.Parameters.AddWithValue("tansoquet", mh.TanSoQuet?.ToString());
+                cmd.Parameters.AddWithValue("congnghemh", mh.CongNgheMH?.ToString());
+                cmd.Parameters.AddWithValue("camung", mh.CamUng?.ToString());
                 cmd.ExecuteNonQuery();
                 count++;
             }
@@ -574,12 +550,11 @@ namespace DoAn_CuaHangLaptop.Models
                 string query = "update manhinh set kichthuoc=@kichthuoc, dophangiai =@dophangiai, tansoquet=@tansoquet, congnghemh =@congnghemh, camung=@camung where mamh = @mamh";
                 MySqlCommand cmd = new MySqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@mamh", mamh);
-                cmd.Parameters.AddWithValue("mamh", mh.MaMH.ToString());
                 cmd.Parameters.AddWithValue("kichthuoc", mh.KichThuoc.ToString());
-                cmd.Parameters.AddWithValue("dophangiai", mh.DoPhanGiai.ToString());
-                cmd.Parameters.AddWithValue("tansoquet", mh.TanSoQuet.ToString());
-                cmd.Parameters.AddWithValue("congnghemh", mh.CongNgheMH.ToString());
-                cmd.Parameters.AddWithValue("camung", mh.CamUng.ToString());
+                cmd.Parameters.AddWithValue("dophangiai", mh.DoPhanGiai?.ToString());
+                cmd.Parameters.AddWithValue("tansoquet", mh.TanSoQuet?.ToString());
+                cmd.Parameters.AddWithValue("congnghemh", mh.CongNgheMH?.ToString());
+                cmd.Parameters.AddWithValue("camung", mh.CamUng?.ToString());
                 cmd.ExecuteNonQuery();
                 count++;
             }
@@ -602,32 +577,6 @@ namespace DoAn_CuaHangLaptop.Models
         }
 
         //SAN PHAM MODEL SanPham
-        /*create table SANPHAM
-        (
-           MASP                 char(6) not null,
-           MANHINH              char(5) not null,
-           BOXULY               char(5) not null,
-           RAM                  char(5) not null,
-           CONGKETNOI           char(5) not null,
-           DANHMUC              char(6) not null,
-           TENSP                varchar(100),
-           SOLUONG              int,
-           MAUSAC               varchar(20),
-           OCUNG                varchar(200),
-           CARDMANHINH          varchar(100),
-           DACBIET              varchar(100),
-           HDH                  varchar(100),
-           THIETKE              varchar(50),
-           KHICHTHUOC_TRONGLUONG varchar(100),
-           WEBCAM               varchar(50),
-           PIN                  varchar(50),
-           RAMAT                int,
-           MOTA                 varchar(200),
-           DONGIA               bigint,
-           HINHANH              varchar(200),
-           primary key (MASP)
-        )DEFAULT CHARSET=utf8mb4;
-        */
 
         public List<SanPham> LayDSSanPham()
         {
@@ -654,11 +603,11 @@ namespace DoAn_CuaHangLaptop.Models
                             MauSac = reader["MauSac"].ToString(),
                             OCung = reader["OCung"].ToString(),
                             CardMH = reader["CardManHinh"].ToString(),
-                            DacBiet = reader["DacBiet"].ToString(),
+                            DacBiet = reader["DacBiet"]?.ToString(),
                             HDH = reader["HDH"].ToString(),
                             ThietKe = reader["ThietKe"].ToString(),
                             KichThuoc_TrongLuong = reader["KichThuoc_TrongLuong"].ToString(),
-                            Webcam = reader["Webcam"].ToString(),
+                            Webcam = reader["Webcam"]?.ToString(),
                             Pin = reader["Pin"].ToString(),
                             RaMat = Convert.ToInt32(reader["RaMat"]),
                             MoTa = reader["MoTa"].ToString(),
@@ -697,11 +646,11 @@ namespace DoAn_CuaHangLaptop.Models
                         SP.MauSac = reader["MauSac"].ToString();
                         SP.OCung = reader["OCung"].ToString();
                         SP.CardMH = reader["CardManHinh"].ToString();
-                        SP.DacBiet = reader["DacBiet"].ToString();
+                        SP.DacBiet = reader["DacBiet"]?.ToString();
                         SP.HDH = reader["HDH"].ToString();
                         SP.ThietKe = reader["ThietKe"].ToString();
                         SP.KichThuoc_TrongLuong = reader["KichThuoc_TrongLuong"].ToString();
-                        SP.Webcam = reader["Webcam"].ToString();
+                        SP.Webcam = reader["Webcam"]?.ToString();
                         SP.Pin = reader["Pin"].ToString();
                         SP.RaMat = Convert.ToInt32(reader["RaMat"]);
                         SP.MoTa = reader["MoTa"].ToString();
@@ -720,11 +669,10 @@ namespace DoAn_CuaHangLaptop.Models
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
-                string query = @"insert into sanpham value(?masp, ?manhinh, ?boxuly, ?RAM, ?congketnoi, ?danhmuc, ?tensp,
-                                                           ?soluong, ?mausac, ?ocung, ?cardmanhinh, ?dacbiet, ?hdh, ?thietke,
-                                                           ?kichthuoc_trongluong, ?webcam, ?pin, ?ramat,?mota, ?dongia, ?hinhanh) ";
+                string query = "insert into SANPHAM value (?masp, ?manhinh, ?boxuly, ?RAM, ?congketnoi, ?danhmuc, ?tensp, ?soluong, ?mausac, ?ocung, ?cardmanhinh, ?dacbiet, ?hdh, ?thietke,?kichthuoc_trongluong, ?webcam, ?pin, ?ramat,?mota, ?dongia, ?hinhanh) ";
+
                 MySqlCommand cmd = new MySqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("masp", sp.MaSP.ToString());
+                cmd.Parameters.AddWithValue("masp", "");
                 cmd.Parameters.AddWithValue("manhinh", sp.ManHinh.ToString());
                 cmd.Parameters.AddWithValue("boxuly", sp.BoXuLy.ToString());
                 cmd.Parameters.AddWithValue("RAM", sp.RAM.ToString());
@@ -735,11 +683,11 @@ namespace DoAn_CuaHangLaptop.Models
                 cmd.Parameters.AddWithValue("mausac", sp.MauSac.ToString());
                 cmd.Parameters.AddWithValue("ocung", sp.OCung.ToString());
                 cmd.Parameters.AddWithValue("cardmanhinh", sp.CardMH.ToString());
-                cmd.Parameters.AddWithValue("dacbiet", sp.DacBiet.ToString());
+                cmd.Parameters.AddWithValue("dacbiet", sp.DacBiet?.ToString());
                 cmd.Parameters.AddWithValue("hdh", sp.HDH.ToString());
                 cmd.Parameters.AddWithValue("thietke", sp.ThietKe.ToString());
                 cmd.Parameters.AddWithValue("kichthuoc_trongluong", sp.KichThuoc_TrongLuong.ToString());
-                cmd.Parameters.AddWithValue("webcam", sp.Webcam.ToString());
+                cmd.Parameters.AddWithValue("webcam", sp.Webcam?.ToString());
                 cmd.Parameters.AddWithValue("pin", sp.Pin.ToString());
                 cmd.Parameters.AddWithValue("ramat", Convert.ToInt32(sp.RaMat.ToString()));
                 cmd.Parameters.AddWithValue("mota", sp.MoTa.ToString());
@@ -763,7 +711,6 @@ namespace DoAn_CuaHangLaptop.Models
                                                            kichtuoc_trongluong=@kichthuoc_trongluong, webcam=@webcam, pin=@pin, ramat=@ramat,mota=@mota, dongia=@dongia, hinhanh=@hinhanh) ";
                 MySqlCommand cmd = new MySqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@masp", masp);
-                cmd.Parameters.AddWithValue("masp", sp.MaSP.ToString());
                 cmd.Parameters.AddWithValue("manhinh", sp.ManHinh.ToString());
                 cmd.Parameters.AddWithValue("boxuly", sp.BoXuLy.ToString());
                 cmd.Parameters.AddWithValue("RAM", sp.RAM.ToString());
@@ -774,11 +721,11 @@ namespace DoAn_CuaHangLaptop.Models
                 cmd.Parameters.AddWithValue("mausac", sp.MauSac.ToString());
                 cmd.Parameters.AddWithValue("ocung", sp.OCung.ToString());
                 cmd.Parameters.AddWithValue("cardmanhinh", sp.CardMH.ToString());
-                cmd.Parameters.AddWithValue("dacbiet", sp.DacBiet.ToString());
+                cmd.Parameters.AddWithValue("dacbiet", sp.DacBiet?.ToString());
                 cmd.Parameters.AddWithValue("hdh", sp.HDH.ToString());
                 cmd.Parameters.AddWithValue("thietke", sp.ThietKe.ToString());
                 cmd.Parameters.AddWithValue("kichthuoc_trongluong", sp.KichThuoc_TrongLuong.ToString());
-                cmd.Parameters.AddWithValue("webcam", sp.Webcam.ToString());
+                cmd.Parameters.AddWithValue("webcam", sp.Webcam?.ToString());
                 cmd.Parameters.AddWithValue("pin", sp.Pin.ToString());
                 cmd.Parameters.AddWithValue("ramat", Convert.ToInt32(sp.RaMat.ToString()));
                 cmd.Parameters.AddWithValue("mota", sp.MoTa.ToString());
