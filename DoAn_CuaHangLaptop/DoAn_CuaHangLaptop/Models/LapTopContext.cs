@@ -679,7 +679,7 @@ namespace DoAn_CuaHangLaptop.Models
                 cmd.Parameters.AddWithValue("congketnoi", sp.CongKN.ToString());
                 cmd.Parameters.AddWithValue("danhmuc", sp.DanhMuc.ToString());
                 cmd.Parameters.AddWithValue("tensp", sp.TenSP.ToString());
-                cmd.Parameters.AddWithValue("soluong", Convert.ToInt32(sp.SoLuong.ToString()));
+                cmd.Parameters.AddWithValue("soluong", Convert.ToInt32(sp.SoLuong));
                 cmd.Parameters.AddWithValue("mausac", sp.MauSac.ToString());
                 cmd.Parameters.AddWithValue("ocung", sp.OCung.ToString());
                 cmd.Parameters.AddWithValue("cardmanhinh", sp.CardMH.ToString());
@@ -689,9 +689,9 @@ namespace DoAn_CuaHangLaptop.Models
                 cmd.Parameters.AddWithValue("kichthuoc_trongluong", sp.KichThuoc_TrongLuong.ToString());
                 cmd.Parameters.AddWithValue("webcam", sp.Webcam?.ToString());
                 cmd.Parameters.AddWithValue("pin", sp.Pin.ToString());
-                cmd.Parameters.AddWithValue("ramat", Convert.ToInt32(sp.RaMat.ToString()));
+                cmd.Parameters.AddWithValue("ramat", Convert.ToInt32(sp.RaMat));
                 cmd.Parameters.AddWithValue("mota", sp.MoTa.ToString());
-                cmd.Parameters.AddWithValue("dongia", Convert.ToInt64(sp.DonGia.ToString()));
+                cmd.Parameters.AddWithValue("dongia", Convert.ToInt64(sp.DonGia));
                 cmd.Parameters.AddWithValue("hinhanh", sp.HinhAnh.ToString());
                 cmd.ExecuteNonQuery();
                 count++;
@@ -708,7 +708,7 @@ namespace DoAn_CuaHangLaptop.Models
                 string masp = sp.MaSP;
                 string query = @"update sanpham set masp=@masp, manhinh=@manhinh, boxuly=@boxuly, RAM=@RAM, congketnoi=@congketnoi, danhmuc=@danhmuc, tensp=@tensp,
                                                            soluong=@soluong, mausac=@mausac, ocung=@ocung, cardmanhinh=@cardmanhinh, dacbiet=@dacbiet, hdh=@hdh, thietke=@thietke,
-                                                           kichtuoc_trongluong=@kichthuoc_trongluong, webcam=@webcam, pin=@pin, ramat=@ramat,mota=@mota, dongia=@dongia, hinhanh=@hinhanh) ";
+                                                           kichthuoc_trongluong=@kichthuoc_trongluong, webcam=@webcam, pin=@pin, ramat=@ramat,mota=@mota, dongia=@dongia, hinhanh=@hinhanh ";
                 MySqlCommand cmd = new MySqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@masp", masp);
                 cmd.Parameters.AddWithValue("manhinh", sp.ManHinh.ToString());

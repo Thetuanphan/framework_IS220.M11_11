@@ -44,7 +44,7 @@ namespace DoAn_CuaHangLaptop.Controllers
         public ActionResult Edit(string id)
         {
             LapTopContext context = HttpContext.RequestServices.GetService(typeof(DoAn_CuaHangLaptop.Models.LapTopContext)) as LapTopContext;
-            ViewData["DanhMuc"] = context.LayDanhMuc(id);
+            ViewData["BoXuLy"] = context.LayBoXuLy(id);
             return View();
         }
 

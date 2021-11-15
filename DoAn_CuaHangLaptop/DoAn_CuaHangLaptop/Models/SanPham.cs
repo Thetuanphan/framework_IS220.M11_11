@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -71,22 +72,22 @@ namespace DoAn_CuaHangLaptop.Models
         [Required]
         [Display(Name = "Màu sắc")]
         public string MauSac { get => mauSac; set => mauSac = value; }
-        [Required]
-        [Display(Name = "CPU")]
+        [ForeignKey("MaBXL")]
+        [Display(Name = "BoXuLy")]
         public string BoXuLy { get => boXuLy; set => boXuLy = value; }
-        [Required]
+        [ForeignKey("MaRAM")]
         [Display(Name = "RAM")]
         public string RAM { get => rAM; set => rAM = value; }
         [Required]
         [Display(Name = "Ổ cứng")]
         public string OCung { get => oCung; set => oCung = value; }
-        [Required]
+        [ForeignKey("MaNH")]
         [Display(Name = "Màn hình")]
         public string ManHinh { get => manHinh; set => manHinh = value; }
         [Required]
         [Display(Name = "Card màn hình")]
         public string CardMH { get => cardMH; set => cardMH = value; }
-        [Required]
+        [ForeignKey("MaCKN")]
         [Display(Name = "Cổng kết nối")]
         public string CongKN { get => congKN; set => congKN = value; }
         [Required]
@@ -119,7 +120,7 @@ namespace DoAn_CuaHangLaptop.Models
         [Required]
         [Display(Name = "Hình ảnh")]
         public string HinhAnh { get => hinhAnh; set => hinhAnh = value; }
-        [Required]
+        [ForeignKey("MaDM")]
         [Display(Name = "Danh mục")]
         public string DanhMuc { get => danhMuc; set => danhMuc = value; }
     }
