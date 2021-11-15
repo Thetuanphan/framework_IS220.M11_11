@@ -31,12 +31,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.Email)
             </th>
-            <th>
+          @*  <th>
                 @Html.DisplayNameFor(model => model.MatKhau)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.XacNhanMatKhau)
-            </th>
+            </th>*@
             <th></th>
         </tr>
     </thead>
@@ -61,16 +61,16 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
-            <td>
+           @* <td>
                 @Html.DisplayFor(modelItem => item.MatKhau)
-            </td>
-            <td>
+            </td>*@
+        @*    <td>
                 @Html.DisplayFor(modelItem => item.XacNhanMatKhau)
-            </td>
+            </td>*@
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                @Html.ActionLink("Edit", "Edit", new { makh = item.MaKH }) |
+                @Html.ActionLink("Details", "Details", item) |
+                @Html.ActionLink("Delete", "Delete", item)@*, new { onclick = "return confirm('Are you sure you wish to delete this customer?');" })*@
             </td>
         </tr>
 }
