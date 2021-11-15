@@ -13,7 +13,7 @@ namespace DoAn_CuaHangLaptop.Models
         string tenSP;
         int soLuong;
         string mauSac;
-        string cPU;
+        string boXuLy;
         string rAM;
         string oCung;
         string manHinh;
@@ -35,13 +35,13 @@ namespace DoAn_CuaHangLaptop.Models
         {
         }
 
-        public SanPham(string maSP, string tenSP, int soLuong, string mauSac, string cPU, string rAM, string oCung, string manHinh, string cardMH, string congKN, string dacBiet, string hDH, string thietKe, string kichThuoc_TrongLuong, string webcam, string pin, int raMat, string moTa, long donGia, string hinhAnh, string danhMuc)
+        public SanPham(string maSP, string tenSP, int soLuong, string mauSac, string boXuLy, string rAM, string oCung, string manHinh, string cardMH, string congKN, string dacBiet, string hDH, string thietKe, string kichThuoc_TrongLuong, string webcam, string pin, int raMat, string moTa, long donGia, string hinhAnh, string danhMuc)
         {
             this.MaSP = maSP;
             this.TenSP = tenSP;
             this.SoLuong = soLuong;
             this.MauSac = mauSac;
-            this.CPU = cPU;
+            this.BoXuLy = boXuLy;
             this.RAM = rAM;
             this.OCung = oCung;
             this.ManHinh = manHinh;
