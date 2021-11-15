@@ -49,18 +49,22 @@ namespace DoAn_CuaHangLaptop.Controllers
             {
                 ModelState.AddModelError("", "Tên đăng nhập đã tồn tại");
             }
+            else if(context.taoKhachHang(kh) == 1)
+            {
+                ModelState.AddModelError("", "Email đã tồn tại");
+            }
             else
             {
                 return Redirect("/KhachHang/Index");
             }
-            return Redirect("/KhachHang/Index");
+            return View(kh);
         }
         // GET: KhachHangController/Edit/5
         public ActionResult Edit(string makh)
         {
             LapTopContext context = HttpContext.RequestServices.GetService(typeof(DoAn_CuaHangLaptop.Models.LapTopContext)) as LapTopContext;
-            ViewData["KhachHang"] = context.layKhachHang(makh);
-            return View();
+           /*ViewData["KhachHang"] = context.layKhachHang(makh);*/
+            return View(context.layKhachHang(makh));
         }
 
         // POST: KhachHangController/Edit/5
@@ -70,7 +74,11 @@ namespace DoAn_CuaHangLaptop.Controllers
         {
             LapTopContext context = HttpContext.RequestServices.GetService(typeof(DoAn_CuaHangLaptop.Models.LapTopContext)) as LapTopContext;
             //ViewBag.greet = makh;
-            if (context.capNhatKhachHang(kh) != 0)
+            if(context.capNhatKhachHang(kh) == 0)
+            {
+                ModelState.AddModelError("", "Email đã tồn tại");
+            }
+            else
             {
                 return Redirect("/KhachHang/Index");
             }

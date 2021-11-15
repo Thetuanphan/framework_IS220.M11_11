@@ -52,10 +52,13 @@ namespace DoAn_CuaHangLaptop.Models
         }
         public int taoKhachHang(KhachHang kh)
         {
-            int count = 0;
+            int count = 1;
             if (!ktTenDangNhap(kh.TenDN))
             {
                 return 0;
+            }
+            else if (!ktEmail(kh.Email)){
+                return 1;
             }
             else
             {
@@ -82,21 +85,29 @@ namespace DoAn_CuaHangLaptop.Models
         public int capNhatKhachHang(KhachHang kh)
         {
             int count = 0;
-            using (MySqlConnection conn = GetConnection())
+            capNhatTaiKhoan(kh.TenDN, kh.MatKhau);
+            if (!ktEmail(kh.Email))
             {
-                conn.Open();
-                string makh = kh.MaKH;
-                string query = "update khachhang set tenkh=@Tenkh,tendangnhap=@Tendangnhap , sodt =@Sodt, email=@Email, gioitinh =@Gioitinh where makh = @makh";
-                MySqlCommand cmd = new MySqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@makh", makh);
-                cmd.Parameters.AddWithValue("@tendangnhap", kh.TenDN.ToString());
-                cmd.Parameters.AddWithValue("makh", kh.MaKH.ToString());
-                cmd.Parameters.AddWithValue("tenkh", kh.TenKH.ToString());
-                cmd.Parameters.AddWithValue("sodt", kh.SoDT.ToString());
-                cmd.Parameters.AddWithValue("email", kh.Email.ToString());
-                cmd.Parameters.AddWithValue("gioitinh", kh.GioiTinh.ToString());
-                cmd.ExecuteNonQuery();
-                count++;
+                return 0;
+            }
+            else
+            {
+                using (MySqlConnection conn = GetConnection())
+                {
+                    conn.Open();
+                    string makh = kh.MaKH;
+                    string query = "update khachhang set tenkh=@Tenkh,tendangnhap=@Tendangnhap , sodt =@Sodt, email=@Email, gioitinh =@Gioitinh where makh = @makh";
+                    MySqlCommand cmd = new MySqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@makh", makh);
+                    cmd.Parameters.AddWithValue("@tendangnhap", kh.TenDN.ToString());
+                    cmd.Parameters.AddWithValue("makh", kh.MaKH.ToString());
+                    cmd.Parameters.AddWithValue("tenkh", kh.TenKH.ToString());
+                    cmd.Parameters.AddWithValue("sodt", kh.SoDT.ToString());
+                    cmd.Parameters.AddWithValue("email", kh.Email.ToString());
+                    cmd.Parameters.AddWithValue("gioitinh", kh.GioiTinh.ToString());
+                    cmd.ExecuteNonQuery();
+                    count++;
+                }
             }
             return count;
         }
@@ -115,6 +126,8 @@ namespace DoAn_CuaHangLaptop.Models
                 cmd.ExecuteNonQuery();
                 count++;
             }
+            KhachHang kh = layKhachHang(makh);
+            xoaTaiKhoan(kh.TenDN);
             return count;
         }
         public KhachHang layKhachHang(string makh)
@@ -144,8 +157,19 @@ namespace DoAn_CuaHangLaptop.Models
             }
             return kh;
         }
+        public bool ktEmail(string email)
+        {
+            List<KhachHang> list = new List<KhachHang>();
+            list = layKhachHang();
+            foreach (KhachHang temp in list)
+            {
+                if (temp.Email == email) return false;
+            }
+            return true;
+        }
+
         //context sự kiện
-       public List<SuKien> laySuKien()
+        public List<SuKien> laySuKien()
         {
             List<SuKien> list = new List<SuKien>();
             using (MySqlConnection conn = GetConnection())
@@ -1027,6 +1051,8 @@ namespace DoAn_CuaHangLaptop.Models
             }
             return true;
         }
+
+
         public int taoTaiKhoan(string tendangnhap, string matkhau)
         {
             int count = 0;
