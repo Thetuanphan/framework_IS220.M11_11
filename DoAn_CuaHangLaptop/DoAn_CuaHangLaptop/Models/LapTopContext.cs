@@ -85,12 +85,12 @@ namespace DoAn_CuaHangLaptop.Models
         public int capNhatKhachHang(KhachHang kh)
         {
             int count = 0;
-            capNhatTaiKhoan(kh.TenDN, kh.MatKhau);
+           /* capNhatTaiKhoan(kh.TenDN, kh.MatKhau);
             if (!ktEmail(kh.Email))
             {
                 return 0;
             }
-            else
+            else*/
             {
                 using (MySqlConnection conn = GetConnection())
                 {
@@ -98,7 +98,7 @@ namespace DoAn_CuaHangLaptop.Models
                     string makh = kh.MaKH;
                     string query = "update khachhang set tenkh=@Tenkh,tendangnhap=@Tendangnhap , sodt =@Sodt, email=@Email, gioitinh =@Gioitinh where makh = @makh";
                     MySqlCommand cmd = new MySqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@makh", makh);
+                    cmd.Parameters.AddWithValue("@makh", kh.MaKH.ToString());
                     cmd.Parameters.AddWithValue("@tendangnhap", kh.TenDN.ToString());
                     cmd.Parameters.AddWithValue("makh", kh.MaKH.ToString());
                     cmd.Parameters.AddWithValue("tenkh", kh.TenKH.ToString());
@@ -195,9 +195,22 @@ namespace DoAn_CuaHangLaptop.Models
             }
             return list;
         }
+        public bool kiemTraNgayBD_KT(DateTime ngaybd, DateTime ngaykt)
+        {
+                int compare1 = DateTime.Compare(ngaybd, ngaykt);
+            if (compare1 < 0)
+            {
+                return true;
+            }
+            else return false;
+        }
         public int taoSuKien(SuKien sk)
         {
             int count = 0;
+            if (!kiemTraNgayBD_KT(sk.NgayBD, sk.NgayKT))
+            {
+                return 0;
+            }
             using (MySqlConnection conn = GetConnection())
             {
                 conn.Open();
@@ -205,7 +218,7 @@ namespace DoAn_CuaHangLaptop.Models
                 //string query = "insert into khachhang value(?tendangnhap, ?tenkh, ?sodt, ?email, ?gioitinh) ";//ON DUPLICATE KEY UPDATE MaKH = ?makh
                 MySqlCommand cmd = new MySqlCommand(query, conn);
                 //cmd.Parameters.AddWithValue("makh", kh.MaKH.ToString());
-                cmd.Parameters.AddWithValue("mask", sk.MaSK.ToString());
+                cmd.Parameters.AddWithValue("mask","");
                 cmd.Parameters.AddWithValue("tensk", sk.TenSK.ToString());
                 cmd.Parameters.AddWithValue("phanTramGiamGia", Convert.ToInt32(sk.PhanTramGiamGia));
                 cmd.Parameters.AddWithValue("ngayBD", sk.NgayBD);
@@ -218,6 +231,10 @@ namespace DoAn_CuaHangLaptop.Models
 
         public int capNhatSuKien(SuKien sk)
         {
+            if (!kiemTraNgayBD_KT(sk.NgayBD, sk.NgayKT))
+            {
+                return 0;
+            }
             int count = 0;
             using (MySqlConnection conn = GetConnection())
             {
@@ -227,7 +244,7 @@ namespace DoAn_CuaHangLaptop.Models
                                     tensk = @tensk,
                                     phantramgiamgia = @phantramgiamgia,
                                     ngaybd = @ngaybd,
-                                    ngaykt = @ngaykt,
+                                    ngaykt = @ngaykt
                                     WHERE mask = @mask;";
                 MySqlCommand cmd = new MySqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("tensk", sk.TenSK.ToString());

@@ -70,7 +70,7 @@ namespace DoAn_CuaHangLaptop.Controllers
         // POST: KhachHangController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(string makh, KhachHang kh)
+        public ActionResult Edit(KhachHang kh)
         {
             LapTopContext context = HttpContext.RequestServices.GetService(typeof(DoAn_CuaHangLaptop.Models.LapTopContext)) as LapTopContext;
             //ViewBag.greet = makh;
@@ -82,7 +82,7 @@ namespace DoAn_CuaHangLaptop.Controllers
             {
                 return Redirect("/KhachHang/Index");
             }
-            return Redirect("/KhachHang/Index");
+            return View(kh);
         }
 
         // GET: KhachHangController/Delete/5

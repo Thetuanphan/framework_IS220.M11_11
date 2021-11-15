@@ -17,10 +17,10 @@ namespace DoAn_CuaHangLaptop.Controllers
             return View(context.laySuKien());
         }
         // GET: SuKienController
-      /*  public ActionResult Index()
-        {
-            return View();
-        }*/
+        /*  public ActionResult Index()
+          {
+              return View();
+          }*/
 
         // GET: SuKienController/Details/5
         public ActionResult Details(SuKien sk)
@@ -31,6 +31,7 @@ namespace DoAn_CuaHangLaptop.Controllers
         // GET: SuKienController/Create
         public ActionResult Create()
         {
+            var model = new SuKien();
             return View();
         }
 
@@ -44,8 +45,11 @@ namespace DoAn_CuaHangLaptop.Controllers
             {
                 return View(sk);
             }
-
-            if (context.taoSuKien(sk) != 0)
+            else if (context.capNhatSuKien(sk) == 0)
+            {
+                ModelState.AddModelError("", "Ngày bắt đầu phải nhỏ hơn ngày kết thúc");
+            }
+            else
             {
                 return Redirect("/SuKien/Index");
             }
@@ -53,24 +57,29 @@ namespace DoAn_CuaHangLaptop.Controllers
         }
 
         // GET: SuKienController/Edit/5
-        public ActionResult Edit(SuKien sk)
+        public ActionResult Edit(string mask)
         {
+            LapTopContext context = HttpContext.RequestServices.GetService(typeof(DoAn_CuaHangLaptop.Models.LapTopContext)) as LapTopContext;
+            SuKien sk = context.laySuKien(mask);
             return View(sk);
         }
 
         // POST: SuKienController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(string makh)
+        public ActionResult Edit(SuKien sk)
         {
             LapTopContext context = HttpContext.RequestServices.GetService(typeof(DoAn_CuaHangLaptop.Models.LapTopContext)) as LapTopContext;
             //ViewBag.greet = makh;
-            SuKien sk = context.laySuKien(makh);
-            if (context.capNhatSuKien(sk) != 0)
+            if(context.capNhatSuKien(sk) == 0)
+            {
+                ModelState.AddModelError("", "Ngày bắt đầu phải nhỏ hơn ngày kết thúc");
+            }
+            else
             {
                 return Redirect("/SuKien/Index");
             }
-            return Redirect("/SuKien/Index");
+            return View(sk);
         }
 
         // GET: SuKienController/Delete/5
