@@ -53,20 +53,28 @@ namespace DoAn_CuaHangLaptop.Models
         public int taoKhachHang(KhachHang kh)
         {
             int count = 0;
-            using (MySqlConnection conn = GetConnection())
+            if (!ktTenDangNhap(kh.TenDN))
             {
-                conn.Open();
-                string query = "INSERT INTO laptop.`khachhang`(TENDANGNHAP,TENKH,SODT,EMAIL,GIOITINH)VALUES(?tendangnhap, ?tenkh, ?sodt, ?email, ?gioitinh);";
-                //string query = "insert into khachhang value(?tendangnhap, ?tenkh, ?sodt, ?email, ?gioitinh) ";//ON DUPLICATE KEY UPDATE MaKH = ?makh
-                MySqlCommand cmd = new MySqlCommand(query, conn);
-                //cmd.Parameters.AddWithValue("makh", kh.MaKH.ToString());
-                cmd.Parameters.AddWithValue("tendangnhap", kh.TenDN.ToString());
-                cmd.Parameters.AddWithValue("tenkh", kh.TenKH.ToString());
-                cmd.Parameters.AddWithValue("sodt", kh.SoDT.ToString());
-                cmd.Parameters.AddWithValue("email", kh.Email.ToString());
-                cmd.Parameters.AddWithValue("gioitinh", kh.GioiTinh.ToString());
-                cmd.ExecuteNonQuery();
-                count++;
+                return 0;
+            }
+            else
+            {
+                taoTaiKhoan(kh.TenDN, kh.MatKhau);
+                using (MySqlConnection conn = GetConnection())
+                {
+                    conn.Open();
+                    string query = "INSERT INTO laptop.`khachhang`(TENDANGNHAP,TENKH,SODT,EMAIL,GIOITINH)VALUES(?tendangnhap, ?tenkh, ?sodt, ?email, ?gioitinh);";
+                    //string query = "insert into khachhang value(?tendangnhap, ?tenkh, ?sodt, ?email, ?gioitinh) ";//ON DUPLICATE KEY UPDATE MaKH = ?makh
+                    MySqlCommand cmd = new MySqlCommand(query, conn);
+                    //cmd.Parameters.AddWithValue("makh", kh.MaKH.ToString());
+                    cmd.Parameters.AddWithValue("tendangnhap", kh.TenDN.ToString());
+                    cmd.Parameters.AddWithValue("tenkh", kh.TenKH.ToString());
+                    cmd.Parameters.AddWithValue("sodt", kh.SoDT.ToString());
+                    cmd.Parameters.AddWithValue("email", kh.Email.ToString());
+                    cmd.Parameters.AddWithValue("gioitinh", kh.GioiTinh.ToString());
+                    cmd.ExecuteNonQuery();
+                    count++;
+                }
             }
             return count;
         }
@@ -137,7 +145,7 @@ namespace DoAn_CuaHangLaptop.Models
             return kh;
         }
         //context sự kiện
-       /* public List<SuKien> laySuKien()
+       public List<SuKien> laySuKien()
         {
             List<SuKien> list = new List<SuKien>();
             using (MySqlConnection conn = GetConnection())
@@ -249,7 +257,7 @@ namespace DoAn_CuaHangLaptop.Models
                 }
             }
             return sk;
-        }*/
+        }
         //DANH MUC MODEL
         public List<DanhMuc> LayDSDanhMuc()
         {
@@ -980,5 +988,569 @@ namespace DoAn_CuaHangLaptop.Models
             }
             return count;
         }
+
+        //===================TÀI KHOẢN =============================
+        public List<TaiKhoan> layDSTaiKhoan()
+        {
+            List<TaiKhoan> dsTaiKhoan = new List<TaiKhoan>();
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                string query = "Select * from TAIKHOAN";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            dsTaiKhoan.Add(new TaiKhoan()
+                            {
+                                TenDangNhap = reader["tendangnhap"].ToString(),
+                                MatKhau = reader["matkhau"].ToString(),
+                            });
+
+                        }
+                    }
+                }
+            }
+            return dsTaiKhoan;
+        }
+        public bool ktTenDangNhap(string tendangnhap)
+        {
+
+            List<TaiKhoan> list = new List<TaiKhoan>();
+            list = layDSTaiKhoan();
+            foreach (TaiKhoan temp in list)
+            {
+                if (temp.TenDangNhap == tendangnhap) return false;
+            }
+            return true;
+        }
+        public int taoTaiKhoan(string tendangnhap, string matkhau)
+        {
+            int count = 0;
+            if (!ktTenDangNhap(tendangnhap)) return 0;
+            else
+            {
+                using (MySqlConnection conn = GetConnection())
+                {
+                    conn.Open();
+                    string query = "INSERT INTO TAIKHOAN VALUES (@tenDangNhap,@matKhau) ";
+                    MySqlCommand cmd = new MySqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@tenDangNhap", tendangnhap.ToString());
+                    cmd.Parameters.AddWithValue("@matKhau", matkhau.ToString());
+                    cmd.ExecuteNonQuery();
+                    count++;
+                }
+                return count;
+            }
+
+        }
+        
+        public int capNhatTaiKhoan(string tendangnhap, string matkhau)
+        {
+            int count = 0;
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                string query = @"UPDATE taikhoan
+                                    SET matkhau = @matkhau
+                                    WHERE tendangnhap = @tendangnhap;";
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("tendangnhap", tendangnhap.ToString());
+                cmd.Parameters.AddWithValue("matkhau", matkhau.ToString());
+                cmd.ExecuteNonQuery();
+                count++;
+            }
+            return count;
+        }
+
+        public void xoaTaiKhoan(string tendangnhap)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                string query = "delete from taikhoan where tendangnhap = @tendangnhap; ";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("tendangnhap", tendangnhap);
+                cmd.ExecuteNonQuery();
+
+            }
+        }
+
+        //===================END TÀI KHOẢN =============================
+
+        //===================NHÂN VIÊN =========================
+        public List<NhanVien> layDSNhanVien()
+        {
+            List<NhanVien> dsNhanVien = new List<NhanVien>();
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                string query = "Select * from NHANVIEN";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            dsNhanVien.Add(new NhanVien()
+                            {
+                                MaNV = reader["manv"].ToString(),
+                                TenDangNhap = reader["tendangnhap"].ToString(),
+                                TenNV = reader["tenNV"].ToString(),
+                                NgaySinh = (DateTime)reader["ngaysinh"],
+                                GioiTinh = reader["gioitinh"].ToString(),
+                                ChucVu = reader["chucvu"].ToString(),
+                                DiaChi = reader["diachi"]?.ToString(),
+                                NgayVL = (DateTime)reader["ngayvl"],
+                                SoDT = reader["sodt"]?.ToString(),
+                            });
+
+                        }
+                    }
+                }
+            }
+            return dsNhanVien;
+        }
+
+        public void xuLyTaoNhanVien(NhanVien nv)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                string query = @"INSERT INTO nhanvien(TENDANGNHAP,TENNV,NGAYSINH,GIOITINH,CHUCVU,DIACHI,NGAYVL,SODT)
+                                     VALUES
+                                     (@tendangnhap,@tennv,@ngaysinh,@gioitinh,@chucvu,@diachi,@ngayvl,@sodt)";
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@tenDangNhap", nv.TenDangNhap.ToString());
+                cmd.Parameters.AddWithValue("@tennv", nv.TenNV.ToString());
+                cmd.Parameters.AddWithValue("@ngaysinh", nv.NgaySinh);
+                cmd.Parameters.AddWithValue("@gioitinh", nv.GioiTinh.ToString());
+                cmd.Parameters.AddWithValue("@chucvu", nv.ChucVu.ToString());
+                cmd.Parameters.AddWithValue("@diachi", nv.DiaChi?.ToString());
+                cmd.Parameters.AddWithValue("@ngayvl", nv.NgayVL);
+                cmd.Parameters.AddWithValue("@sodt", nv.SoDT?.ToString());
+                cmd.ExecuteNonQuery();
+            }
+        }
+        public bool ktNgayVL(DateTime ngaySinh, DateTime ngayVL)
+        {
+            int namSinh = ngaySinh.Year;
+            int namVL = ngayVL.Year;
+            if (namSinh > namVL)
+            {
+                return false;
+            }
+            else
+            {
+                if (namVL - namSinh < 16) return false;
+
+            }
+            return true;
+        }
+
+        public int taoNhanVien(NhanVien nv)
+        {
+            int count = 1;
+            if (!ktTenDangNhap(nv.TenDangNhap))
+            {
+                return 0;
+            }
+            else if (!ktNgayVL(nv.NgaySinh, nv.NgayVL))
+            {
+                return 1;
+            }
+            else
+            {
+                taoTaiKhoan(nv.TenDangNhap, nv.MatKhau);
+                xuLyTaoNhanVien(nv);
+                count++;
+            }
+
+            return count;
+        }
+
+        public NhanVien layThongTinNV(string manv)
+        {
+            NhanVien nv = new NhanVien();
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                string query = "select * from Nhanvien where manv =@manv";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@manv", manv);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        nv.MaNV = reader["manv"].ToString();
+                        nv.TenDangNhap = reader["tendangnhap"].ToString();
+                        nv.TenNV = reader["tenNV"].ToString();
+                        nv.NgaySinh = (DateTime)reader["ngaysinh"];
+                        nv.GioiTinh = reader["gioitinh"].ToString();
+                        nv.ChucVu = reader["chucvu"].ToString();
+                        nv.DiaChi = reader["diachi"]?.ToString();
+                        nv.NgayVL = (DateTime)reader["ngayvl"];
+                        nv.SoDT = reader["sodt"]?.ToString();
+                    };
+
+                }
+            }
+            return nv;
+        }
+
+        public int capNhatNhanVien(NhanVien nv)
+        {
+            int count = 0;
+            if (!ktNgayVL(nv.NgaySinh, nv.NgayVL))
+            {
+                return 0;
+            }
+            else
+            {
+                capNhatTaiKhoan(nv.TenDangNhap, nv.MatKhau);
+                using (MySqlConnection conn = GetConnection())
+                {
+                    conn.Open();
+                    string query = @"UPDATE nhanvien
+                                    SET
+                                    TENNV = @tennv,
+                                    NGAYSINH = @ngaysinh,
+                                    GIOITINH = @gioitinh,
+                                    CHUCVU = @chucvu,
+                                    DIACHI = @diachi,
+                                    NGAYVL = @ngayvl,
+                                    SODT = @sodt
+                                    WHERE MANV = @manv;";
+
+                    MySqlCommand cmd = new MySqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("TENNV", nv.TenNV.ToString());
+                    cmd.Parameters.AddWithValue("NGAYSINH", nv.NgaySinh);
+                    cmd.Parameters.AddWithValue("GIOITINH", nv.GioiTinh.ToString());
+                    cmd.Parameters.AddWithValue("CHUCVU", nv.ChucVu.ToString());
+                    cmd.Parameters.AddWithValue("DIACHI", nv.DiaChi?.ToString());
+                    cmd.Parameters.AddWithValue("NGAYVL", nv.NgayVL);
+                    cmd.Parameters.AddWithValue("SODT", nv.SoDT?.ToString());
+                    cmd.Parameters.AddWithValue("MANV", nv.MaNV.ToString());
+                    cmd.ExecuteNonQuery();
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
+        public void xoaNhanVien(string manv, string tendangnhap)
+        {
+
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                string query = "delete from nhanvien where manv = @manv ";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("manv", manv);
+                cmd.ExecuteNonQuery();
+            }
+            xoaTaiKhoan(tendangnhap);
+        }
+        //===================END NHÂN VIÊN =========================
+
+        //===================HÓA ĐƠN ===================================
+        public List<HoaDon> layDSHoaDon()
+        {
+            List<HoaDon> dsHoaDon = new List<HoaDon>();
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                string query = "Select * from HOADON";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            dsHoaDon.Add(new HoaDon()
+                            {
+                                MaHD = reader["mahd"].ToString(),
+                                MaKH = reader["makh"].ToString(),
+                                MaNV = reader["manv"].ToString(),
+                                MaSK = reader["mask"].ToString(),
+                                NgayHD = (DateTime)reader["ngayhd"],
+                                DiaChiGiaoHang = reader["diachigiaohang"]?.ToString(),
+                                TongTien = int.Parse(reader["tongtien"]?.ToString()),
+                                ThanhTien = int.Parse(reader["thanhtien"]?.ToString()),
+
+                            });
+
+                        }
+                    }
+                }
+            }
+            return dsHoaDon;
+        }
+
+
+        public int taoHoaDon(HoaDon hd)
+        {
+            int count = 0;
+            DateTime dateNow = DateTime.Now;
+            var date = dateNow.ToString("yyyy-MM-dd");
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                string query = @"INSERT INTO `laptop`.`hoadon`(`MAKH`,`MANV`,`MASK`,`NGAYHD`,`DIACHIGIAOHANG`,`TONGTIEN`,`THANHTIEN`)
+                                    VALUES (@makh,@manv,@mask,@ngayhd,@diachigiaohang,@tongtien,@thanhtien);";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@makh", hd.MaKH.ToString());
+                cmd.Parameters.AddWithValue("@manv", hd.MaNV.ToString());
+                cmd.Parameters.AddWithValue("@mask", hd.MaSK.ToString());
+                cmd.Parameters.AddWithValue("@ngayhd", date);
+                cmd.Parameters.AddWithValue("@diachigiaohang", hd.DiaChiGiaoHang?.ToString());
+                cmd.Parameters.AddWithValue("@tongtien", 0);
+                cmd.Parameters.AddWithValue("@thanhtien", 0);
+                cmd.ExecuteNonQuery();
+                count++;
+            }
+
+            return count;
+
+        }
+
+        public HoaDon layThongTinHD(string mahd)
+        {
+            HoaDon hd = new HoaDon();
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                string query = "select * from HoaDon where mahd =@mahd";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@mahd", mahd);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        hd.MaHD = reader["mahd"].ToString();
+                        hd.MaKH = reader["makh"].ToString();
+                        hd.MaNV = reader["manv"].ToString();
+                        hd.MaSK = reader["mask"].ToString();
+                        hd.NgayHD = (DateTime)reader["ngayhd"];
+                        hd.DiaChiGiaoHang = reader["diachigiaohang"]?.ToString();
+                        hd.TongTien = long.Parse(reader["tongtien"]?.ToString());
+                        hd.ThanhTien = long.Parse(reader["thanhtien"]?.ToString());
+                    };
+
+                }
+            }
+            return hd;
+        }
+        public int capNhatHoaDon(HoaDon hd)
+        {
+            int count = 0;
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                string query = @"UPDATE `laptop`.`hoadon`
+                                SET
+                                `MAKH` = @makh,
+                                `MANV` = @manv,
+                                `MASK` = @mask,
+                                `DIACHIGIAOHANG` = @diachigiaohang
+                                WHERE `MAHD` = @mahd;";
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@makh", hd.MaKH.ToString());
+                cmd.Parameters.AddWithValue("@manv", hd.MaNV.ToString());
+                cmd.Parameters.AddWithValue("@mask", hd.MaSK.ToString());
+                cmd.Parameters.AddWithValue("@diachigiaohang", hd.DiaChiGiaoHang?.ToString());
+                cmd.Parameters.AddWithValue("@mahd", hd.MaHD);
+                cmd.ExecuteNonQuery();
+                count++;
+            }
+            return count;
+        }
+
+        public void xoaHoaDon(string mahd)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                string query = "delete from hoadon where mahd = @mahd; ";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("mahd", mahd);
+                cmd.ExecuteNonQuery();
+
+            }
+        }
+        public List<SuKien> layDSSKConHan()
+        {
+            DateTime now = DateTime.Now;
+            List<SuKien> listSK = new List<SuKien>();
+            listSK = laySuKien();
+            List<SuKien> listRenderSK = new List<SuKien>();
+            foreach (SuKien item in listSK)
+            {
+                int compare1 = DateTime.Compare(item.NgayBD, now);
+                int compare2 = DateTime.Compare(now, item.NgayKT);
+                if (compare1 < 0 && compare2 < 0)
+                {
+                    listRenderSK.Add(item);
+                }
+            }
+            return listRenderSK;
+        }
+
+        //===================END HÓA ĐƠN ===============================
+
+        //===================CTHD ======================================
+        public List<CTHD> layDSCTHD(string mahd)
+        {
+            List<CTHD> dsCTHD = new List<CTHD>();
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                string query = "Select * from CTHD";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            if (reader["mahd"].ToString() == mahd)
+                            {
+                                dsCTHD.Add(new CTHD()
+                                {
+                                    MaHD = reader["mahd"].ToString(),
+                                    MaSP = reader["masp"].ToString(),
+                                    SoLuong = int.Parse(reader["soluong"].ToString()),
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            return dsCTHD;
+        }
+        public List<SanPham> dsSPTonTai(string mahd)
+        {
+            List<CTHD> dsCTHD = new List<CTHD>();
+            dsCTHD = layDSCTHD(mahd);
+            List<SanPham> dsSP = new List<SanPham>();
+            dsSP = LayDSSanPham();
+            List<SanPham> dsSPRender = new List<SanPham>();
+            if (!dsCTHD.Any())
+            {
+                return dsSP;
+            }
+            else
+            {
+                foreach (SanPham sp in dsSP)
+                {
+                    foreach (CTHD ct in dsCTHD)
+                    {
+                        if (sp.MaSP != ct.MaSP)
+                        {
+                            dsSPRender.Add(sp);
+                        }
+                    }
+                }
+                return dsSPRender;
+            }
+        }
+        public int taoCTHD(CTHD cthd)
+        {
+            int count = 0;
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                string query = @"INSERT INTO `laptop`.`CTHD`(`MAHD`,`MASP`,`SOLUONG`)
+                                        VALUES (@mahd,@masp,@soluong);";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@mahd", cthd.MaHD.ToString());
+                cmd.Parameters.AddWithValue("@masp", cthd.MaSP.ToString());
+                cmd.Parameters.AddWithValue("@soluong", cthd.SoLuong);
+                cmd.ExecuteNonQuery();
+                count++;
+            }
+
+            return count;
+
+        }
+        public bool ktSoLuongSP(string masp, int sl)
+        {
+            if (LaySanPham(masp).SoLuong < sl) return false;
+            return true;
+        }
+        public CTHD layThongTinCTHD(string mahd, string masp)
+        {
+            CTHD cthd = new CTHD();
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                string query = "select * from CTHD where mahd =@mahd and masp = @masp";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@mahd", mahd);
+                cmd.Parameters.AddWithValue("@masp", masp);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        cthd.MaHD = reader["mahd"].ToString();
+                        cthd.MaSP = reader["masp"].ToString();
+                        cthd.SoLuong = int.Parse(reader["soluong"].ToString());
+                    };
+
+                }
+            }
+            return cthd;
+        }
+        public int capNhatCTHD(CTHD cthd)
+        {
+            int count = 0;
+            if (!ktSoLuongSP(cthd.MaSP, cthd.SoLuong))
+            {
+                return 0;
+            }
+            else
+            {
+                using (MySqlConnection conn = GetConnection())
+                {
+                    conn.Open();
+                    string query = @"UPDATE `laptop`.`cthd`
+                                    SET
+                                    `SOLUONG` = @soluong
+                                   WHERE `MAHD` = @mahd and masp = @masp ;";
+
+                    MySqlCommand cmd = new MySqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@mahd", cthd.MaHD.ToString());
+                    cmd.Parameters.AddWithValue("@masp", cthd.MaSP.ToString());
+                    cmd.Parameters.AddWithValue("@soluong", cthd.SoLuong);
+                    cmd.ExecuteNonQuery();
+                    count++;
+                }
+            }
+            return count;
+        }
+
+        public void xoaCTHD(string mahd, string masp)
+        {
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                string query = "delete from cthd where mahd = @mahd and masp = @masp; ";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("mahd", mahd);
+                cmd.Parameters.AddWithValue("@masp", masp);
+                cmd.ExecuteNonQuery();
+
+            }
+        }
+        //===================END CTHD ===================================
     }
 }

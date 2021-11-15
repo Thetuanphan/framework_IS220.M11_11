@@ -45,7 +45,11 @@ namespace DoAn_CuaHangLaptop.Controllers
                 return View(kh);
             }
 
-            if (context.taoKhachHang(kh) != 0)
+            if (context.taoKhachHang(kh) == 0)
+            {
+                ModelState.AddModelError("", "Tên đăng nhập đã tồn tại");
+            }
+            else
             {
                 return Redirect("/KhachHang/Index");
             }

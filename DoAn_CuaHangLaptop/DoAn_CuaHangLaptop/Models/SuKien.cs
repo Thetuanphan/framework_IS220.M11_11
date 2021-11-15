@@ -13,6 +13,10 @@ namespace DoAn_CuaHangLaptop.Models
         DateTime ngayBD;
         DateTime ngayKT;
 
+        public SuKien()
+        {
+        }
+
         public SuKien(string maSK, string tenSK, int phanTramGiamGia, DateTime ngayBD, DateTime ngayKT)
         {
             this.maSK = maSK;

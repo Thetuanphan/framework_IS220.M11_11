@@ -31,7 +31,6 @@ namespace DoAn_CuaHangLaptop.Controllers
         // GET: SuKienController/Create
         public ActionResult Create()
         {
-            var model = new SuKien();
             return View();
         }
 
