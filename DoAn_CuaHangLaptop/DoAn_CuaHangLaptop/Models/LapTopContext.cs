@@ -1122,6 +1122,27 @@ namespace DoAn_CuaHangLaptop.Models
 
             }
         }
+        public TaiKhoan layThongTinTK(string tendangnhap)
+        {
+            TaiKhoan tk = new TaiKhoan();
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                string query = "select * from TaiKhoan where tendangnhap =@tendangnhap";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@tendangnhap", tendangnhap);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        tk.TenDangNhap = reader["tendangnhap"].ToString();
+                        tk.MatKhau = reader["matkhau"].ToString();
+                    };
+
+                }
+            }
+            return tk;
+        }
 
         //===================END TÀI KHOẢN =============================
 
