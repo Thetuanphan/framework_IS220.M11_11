@@ -5,73 +5,68 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Create</h1>
-
-<h4>KhachHang</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
+<div class="hero-wrap hero-bread" style="background-image: url('~/wwwroot/images/bg_6.jpg');">
+    <div class="container">
+        <div class="row no-gutters slider-text align-items-center justify-content-center">
+            <div class="col-md-9 ftco-animate text-center">
+                <h3 class="mb-0 bread">Đăng ký</h3>
+            </div>
+        </div>
+        <form class="needs-validation" style="max-width: 40em; margin: auto" novalidate asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            @* <div class="form-group">
-            <label asp-for="MaKH" class="control-label"></label>
-            <input asp-for="MaKH" class="form-control" />
-            <span asp-validation-for="MaKH" class="text-danger"></span>
-        </div>*@
             <div class="form-group">
                 <label asp-for="TenKH" class="control-label"></label>
-                <input asp-for="TenKH" class="form-control" />
+                <input asp-for="TenKH" class="form-control rad-border-15px" placeholder="Nhập họ và tên" />
                 <span asp-validation-for="TenKH" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="TenDN" class="control-label"></label>
-                <input asp-for="TenDN" class="form-control" />
-                <span asp-validation-for="TenDN" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <label asp-for="SoDT" class="control-label"></label>
-                <input asp-for="SoDT" class="form-control" />
+                <input asp-for="SoDT" class="form-control rad-border-15px" placeholder="Nhập số điện thoại" />
                 <span asp-validation-for="SoDT" class="text-danger"></span>
             </div>
-            @*<div class="form-group">
-            <label asp-for="GioiTinh" class="control-label"></label>
-            <input asp-for="GioiTinh" class="form-control" />
-            <span asp-validation-for="GioiTinh" class="text-danger"></span>
-        </div>*@
-            <div class="form-group">
-                <label asp-for="GioiTinh" class="control-label"></label>
-                <select class="form-control" asp-for="GioiTinh">
-                    <option>Nam</option>
-                    <option>Nữ</option>
-                </select>
-                <span asp-validation-for="GioiTinh" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
+                <input asp-for="Email" class="form-control rad-border-15px" placeholder="Nhập email" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="GioiTinh" class="control-label"></label>
+                <select class="form-control rad-border-15px" asp-for="GioiTinh">
+                    <option>Nam</option>
+                    <option>Nữ</option>
+                    <option>Khác</option>
+                </select>
+                <span asp-validation-for="GioiTinh" class="text-danger"></span>
+            </div>
+            
+            <div class="form-group">
+                <label asp-for="TenDN" class="control-label"></label>
+                <input asp-for="TenDN" class="form-control rad-border-15px" placeholder="Nhập tên đăng nhập" />
+                <span asp-validation-for="TenDN" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
                 <label asp-for="MatKhau" class="control-label"></label>
-                <input asp-for="MatKhau" class="form-control" />
+                <input asp-for="MatKhau" class="form-control rad-border-15px" placeholder="Nhập mật khẩu" />
                 <span asp-validation-for="MatKhau" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="XacNhanMatKhau" class="control-label"></label>
-                <input asp-for="XacNhanMatKhau" class="form-control" />
+                <input asp-for="XacNhanMatKhau" class="form-control rad-border-15px" placeholder="Nhập lại mật khẩu" />
                 <span asp-validation-for="XacNhanMatKhau" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-@*
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}*@
+            <div class="form-group form-check">
+                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                <label class="form-check-label" for="exampleCheck1">Ghi nhớ đăng nhập</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Đăng ký</button>
+        </form>
+            </div>
+        </div>
+  
+
+           

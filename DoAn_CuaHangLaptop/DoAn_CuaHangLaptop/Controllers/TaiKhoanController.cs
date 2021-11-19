@@ -6,68 +6,106 @@ using System.Linq;
 using System.Threading.Tasks;
 using DoAn_CuaHangLaptop.Models;
 using System.Security.Cryptography;
-using Microsoft.AspNetCore.Http;
 
 namespace DoAn_CuaHangLaptop.Controllers
 {
     public class TaiKhoanController : Controller
     {
-
-        // GET: TaiKhoanController
-
-        public IActionResult Index()
+        //GET: LOGIN
+        public IActionResult Signin()
         {
-            LapTopContext context = HttpContext.RequestServices.GetService(typeof(DoAn_CuaHangLaptop.Models.LapTopContext)) as LapTopContext;
-            ViewBag.dsTK = context.layDSTaiKhoan();
             return View();
         }
-        
-
-        // GET: TaiKhoanController/Details/5
-        public ActionResult Details(string tendangnhap)
-        {
-            LapTopContext context = HttpContext.RequestServices.GetService(typeof(DoAn_CuaHangLaptop.Models.LapTopContext)) as LapTopContext;
-            return View(context.layThongTinTK(tendangnhap));
-        }
-
-        // GET: TaiKhoanController/Create
-        public ActionResult Create()
-        {
-            var model = new TaiKhoan();
-            return View();
-        }
-
-        // POST: TaiKhoanController/Create
+        //POST : LOGIN
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(TaiKhoan tk)
+        public IActionResult Signin(TaiKhoan tk)
         {
-
-            LapTopContext context = HttpContext.RequestServices.GetService(typeof(DoAn_CuaHangLaptop.Models.LapTopContext)) as LapTopContext;
             if (!ModelState.IsValid)
             {
+
                 return View(tk);
             }
-            if (context.taoTaiKhoan(tk.TenDangNhap, tk.MatKhau) == 0)
+            LapTopContext context = HttpContext.RequestServices.GetService(typeof(DoAn_CuaHangLaptop.Models.LapTopContext)) as LapTopContext;
+            var callfunc = context.layThongTinTK(tk.TenDangNhap);
+            if (context.ktTenDangNhap(tk.TenDangNhap))
             {
-                ModelState.AddModelError("", "Tên tài khoản đã tồn tại");
+                ViewBag.error = "Tên đăng nhập không tồn tại";
+                return View(tk);
+            }
+            else if (tk.MatKhau == callfunc.MatKhau)
+            {
+
+                HttpContext.Session.SetString("usn", tk.TenDangNhap);
+                HttpContext.Session.SetString("pwd", tk.MatKhau);
+
+                return RedirectToAction("Index", "Home");
             }
             else
             {
-                TempData["AlertMessage"] = "Thêm thành công";
-                TempData["AlertType"] = "alert alert-success";
-                return RedirectToAction("Index");
+                ViewBag.error = "Login failed";
+                return RedirectToAction("Login");
             }
-
-
-            return View(tk);
         }
+        // GET: TaiKhoanController
+
+        //public IActionResult Index()
+        //{
+        //    LapTopContext context = HttpContext.RequestServices.GetService(typeof(DoAn_CuaHangLaptop.Models.LapTopContext)) as LapTopContext;
+        //    ViewBag.dsTK = context.layDSTaiKhoan();
+        //    return View();
+        //}
+        
+
+        // GET: TaiKhoanController/Details/5
+        //public ActionResult Details(string tendangnhap)
+        //{
+        //    LapTopContext context = HttpContext.RequestServices.GetService(typeof(DoAn_CuaHangLaptop.Models.LapTopContext)) as LapTopContext;
+        //    return View(context.layThongTinTK(tendangnhap));
+        //}
+
+        // GET: TaiKhoanController/Create
+        //public ActionResult Create()
+        //{
+        //    var model = new TaiKhoan();
+        //    return View();
+        //}
+
+        // POST: TaiKhoanController/Create
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult Create(TaiKhoan tk)
+        //{
+
+        //    LapTopContext context = HttpContext.RequestServices.GetService(typeof(DoAn_CuaHangLaptop.Models.LapTopContext)) as LapTopContext;
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return View(tk);
+        //    }
+        //    if (context.taoTaiKhoan(tk.TenDangNhap, tk.MatKhau) == 0)
+        //    {
+        //        ModelState.AddModelError("", "Tên tài khoản đã tồn tại");
+        //    }
+        //    else
+        //    {
+        //        TempData["AlertMessage"] = "Thêm thành công";
+        //        TempData["AlertType"] = "alert alert-success";
+        //        return RedirectToAction("Index");
+        //    }
+
+
+        //    return View(tk);
+        //}
 
 
         // GET: TaiKhoanController/Edit/5
         public ActionResult Edit(string tendangnhap)
         {
             LapTopContext context = HttpContext.RequestServices.GetService(typeof(DoAn_CuaHangLaptop.Models.LapTopContext)) as LapTopContext;
+            var result = context.layThongTinTK(tendangnhap).MatKhau;
+            if (string.IsNullOrEmpty(result))
+            {
+                return Content("");
+            }
             return View(context.layThongTinTK(tendangnhap));
         }
 
@@ -78,16 +116,16 @@ namespace DoAn_CuaHangLaptop.Controllers
         {
 
             LapTopContext context = HttpContext.RequestServices.GetService(typeof(DoAn_CuaHangLaptop.Models.LapTopContext)) as LapTopContext;
+           
             if (context.capNhatTaiKhoan(tk.TenDangNhap, tk.MatKhau) != 0)
             {
                 TempData["AlertMessage"] = "Cập nhật thành công";
                 TempData["AlertType"] = "alert alert-success";
-                return RedirectToAction(nameof(Index));
-
+                return RedirectToAction("Signin");
+           
             }
-            return View(tk);
 
-
+            return View();
         }
         [HttpPost]
         public JsonResult timTaiKhoan(string tendangnhap)
@@ -100,25 +138,25 @@ namespace DoAn_CuaHangLaptop.Controllers
 
 
         //POST: TaiKhoanController/Delete/5
-        [HttpPost]
-        public ActionResult Delete(string tendangnhap)
-        {
-            try
-            {
-                LapTopContext context = HttpContext.RequestServices.GetService(typeof(DoAn_CuaHangLaptop.Models.LapTopContext)) as LapTopContext;
-                context.xoaTaiKhoan(tendangnhap);
-                TempData["AlertMessage"] = "Xóa thành công";
-                TempData["AlertType"] = "alert alert-success";
-                return RedirectToAction("Index");
-            }
-            catch (MySql.Data.MySqlClient.MySqlException ex)
-            {
-                TempData["AlertMessage"] = "Tồn tại người dùng có tài khoản này. Không thể xóa";
-                TempData["AlertType"] = "alert alert-danger";
-                return RedirectToAction("Index");
+        //[HttpPost]
+        //public ActionResult Delete(string tendangnhap)
+        //{
+        //    try
+        //    {
+        //        LapTopContext context = HttpContext.RequestServices.GetService(typeof(DoAn_CuaHangLaptop.Models.LapTopContext)) as LapTopContext;
+        //        context.xoaTaiKhoan(tendangnhap);
+        //        TempData["AlertMessage"] = "Xóa thành công";
+        //        TempData["AlertType"] = "alert alert-success";
+        //        return RedirectToAction("Index");
+        //    }
+        //    catch (MySql.Data.MySqlClient.MySqlException ex)
+        //    {
+        //        TempData["AlertMessage"] = "Tồn tại người dùng có tài khoản này. Không thể xóa";
+        //        TempData["AlertType"] = "alert alert-danger";
+        //        return RedirectToAction("Index");
 
-            }
+        //    }
 
-        }
+        //}
     }
 }
