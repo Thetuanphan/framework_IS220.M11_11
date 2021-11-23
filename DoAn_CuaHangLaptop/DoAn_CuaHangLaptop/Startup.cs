@@ -71,13 +71,13 @@ namespace DoAn_CuaHangLaptop
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            app.UseEndpoints(routes =>
-            {
-                routes.MapControllerRoute(
-                  name: "areas",
-                  pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
-                );
-            });
+            //app.UseEndpoints(routes =>
+            //{
+            //    routes.MapControllerRoute(
+            //      name: "areas",
+            //      pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+            //    );
+            //});
         }
     }
 }
