@@ -10,7 +10,8 @@ use LapTop;
 create table TAIKHOAN
 (
    TENDANGNHAP          varchar(20) not null,
-   MATKHAU              varchar(20),
+   MATKHAU              varchar(20) not null,
+   QUYEN                varchar(20) not null,
    primary key (TENDANGNHAP)
 ) default charset = utf8mb4;
 
