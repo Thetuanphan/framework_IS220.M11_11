@@ -1,9 +1,7 @@
-/*create database LapTop;
-use laptop;*/
-------------- Table ---------------
-
+drop database LapTop;
+create database LapTop;
 use LapTop;
-
+------------- Table ---------------
 /*==============================================================*/
 /* Table: TAIKHOAN                 		                        */
 /*==============================================================*/
@@ -230,7 +228,7 @@ commit;
 
 /*----- AUTOID_KHACHHANG ----*/
 
-DROP FUNCTION IF EXISTS AUTO_IDKH
+DROP FUNCTION IF EXISTS AUTO_IDKH;
 DELIMITER $$
 CREATE FUNCTION AUTO_IDKH()
 RETURNS VARCHAR(6)
@@ -259,7 +257,7 @@ BEGIN
 END$$ 
 DELIMITER ;
 
-DROP TRIGGER IF EXISTS trigger_AUTO_ID_KH
+DROP TRIGGER IF EXISTS trigger_AUTO_ID_KH;
 DELIMITER $$
 CREATE TRIGGER trigger_AUTO_ID_KH
     BEFORE INSERT
@@ -271,7 +269,7 @@ DELIMITER ;
 
 /*----- AUTOID_NHANVIEN ----*/
 
-DROP FUNCTION IF EXISTS AUTO_IDNV
+DROP FUNCTION IF EXISTS AUTO_IDNV;
 DELIMITER $$
 CREATE FUNCTION AUTO_IDNV()
 RETURNS VARCHAR(6)
@@ -301,7 +299,7 @@ BEGIN
 END$$ 
 DELIMITER ;
 
-DROP TRIGGER IF EXISTS trigger_AUTO_ID_NV
+DROP TRIGGER IF EXISTS trigger_AUTO_ID_NV;
 DELIMITER $$
 CREATE TRIGGER trigger_AUTO_ID_NV
     BEFORE INSERT
@@ -313,7 +311,7 @@ DELIMITER ;
 
 /*----- AUTOID_BONHORAM ----*/
 
-DROP FUNCTION IF EXISTS AUTO_IDRAM
+DROP FUNCTION IF EXISTS AUTO_IDRAM;
 DELIMITER $$
 CREATE FUNCTION AUTO_IDRAM()
 RETURNS VARCHAR(5)
@@ -336,7 +334,7 @@ BEGIN
 END$$ 
 DELIMITER ;
 
-DROP TRIGGER IF EXISTS trigger_AUTO_ID_RAM
+DROP TRIGGER IF EXISTS trigger_AUTO_ID_RAM;
 DELIMITER $$
 CREATE TRIGGER trigger_AUTO_ID_RAM
     BEFORE INSERT
@@ -348,7 +346,7 @@ DELIMITER ;
 
 /*----- AUTOID_BOXULY ----*/
 
-DROP FUNCTION IF EXISTS AUTO_IDBXL
+DROP FUNCTION IF EXISTS AUTO_IDBXL;
 DELIMITER $$
 CREATE FUNCTION AUTO_IDBXL()
 RETURNS VARCHAR(5)
@@ -371,7 +369,7 @@ BEGIN
 END$$ 
 DELIMITER ;
 
-DROP TRIGGER IF EXISTS trigger_AUTO_ID_BXL
+DROP TRIGGER IF EXISTS trigger_AUTO_ID_BXL;
 DELIMITER $$
 CREATE TRIGGER trigger_AUTO_ID_BXL
     BEFORE INSERT
@@ -383,7 +381,7 @@ DELIMITER ;
 
 /*----- AUTOID_CONGKETNOI ----*/
 
-DROP FUNCTION IF EXISTS AUTO_IDCKN
+DROP FUNCTION IF EXISTS AUTO_IDCKN;
 DELIMITER $$
 CREATE FUNCTION AUTO_IDCKN()
 RETURNS VARCHAR(5)
@@ -406,7 +404,7 @@ BEGIN
 END$$ 
 DELIMITER ;
 
-DROP TRIGGER IF EXISTS trigger_AUTO_ID_CKN
+DROP TRIGGER IF EXISTS trigger_AUTO_ID_CKN;
 DELIMITER $$
 CREATE TRIGGER trigger_AUTO_ID_CKN
     BEFORE INSERT
@@ -418,7 +416,7 @@ DELIMITER ;
 
 /*----- AUTOID_MANHINH ----*/
 
-DROP FUNCTION IF EXISTS AUTO_IDMH
+DROP FUNCTION IF EXISTS AUTO_IDMH;
 DELIMITER $$
 CREATE FUNCTION AUTO_IDMH()
 RETURNS VARCHAR(5)
@@ -444,7 +442,7 @@ BEGIN
 END$$ 
 DELIMITER ;
 
-DROP TRIGGER IF EXISTS trigger_AUTO_ID_MH
+DROP TRIGGER IF EXISTS trigger_AUTO_ID_MH;
 DELIMITER $$
 CREATE TRIGGER trigger_AUTO_ID_MH
     BEFORE INSERT
@@ -456,7 +454,7 @@ DELIMITER ;sanpham
 
 /*----- AUTOID_DANHMUCSANPHAM ----*/
 
-DROP FUNCTION IF EXISTS AUTO_IDDMSP
+DROP FUNCTION IF EXISTS AUTO_IDDMSP;
 DELIMITER $$
 CREATE FUNCTION AUTO_IDDMSP()
 RETURNS VARCHAR(6)
@@ -486,7 +484,7 @@ BEGIN
 END$$ 
 DELIMITER ;
 
-DROP TRIGGER IF EXISTS trigger_AUTO_ID_DMSP
+DROP TRIGGER IF EXISTS trigger_AUTO_ID_DMSP;
 DELIMITER $$
 CREATE TRIGGER trigger_AUTO_ID_DMSP
     BEFORE INSERT
@@ -498,7 +496,7 @@ DELIMITER ;
 
 /*----- AUTOID_SANPHAM ----*/
 
-DROP FUNCTION IF EXISTS AUTO_IDSP
+DROP FUNCTION IF EXISTS AUTO_IDSP;
 DELIMITER $$
 CREATE FUNCTION AUTO_IDSP()
 RETURNS VARCHAR(6)
@@ -527,7 +525,7 @@ BEGIN
 END$$ 
 DELIMITER ;
 
-DROP TRIGGER IF EXISTS trigger_AUTO_ID_SP
+DROP TRIGGER IF EXISTS trigger_AUTO_ID_SP;
 DELIMITER $$
 CREATE TRIGGER trigger_AUTO_ID_SP
     BEFORE INSERT
@@ -536,521 +534,263 @@ BEGIN
 	SET NEW.MASP = AUTO_IDSP();
 END$$    
 DELIMITER ;
-/*------------------- TRIGGER ---------------------------*/
-create trigger CLR_TRIGGER__CODE_KHACHHANG on _CODE_KHACHHANG  insert as
-external name %Assembly.GeneratedName%.
-go
 
+/*----- AUTOID_HOADON ----*/
+DROP FUNCTION IF EXISTS AUTO_IDHD;
+DELIMITER $$
+CREATE FUNCTION AUTO_IDHD()
+RETURNS VARCHAR(6)
+DETERMINISTIC
+BEGIN
+	DECLARE MAHDNEW VARCHAR(6);
+    declare ID VARCHAR(4);
+	IF (SELECT COUNT(MAHD) FROM HOADON) = 0 THEN
+		SET MAHDNEW = 'HD0001';
+	ELSE
+		SELECT MAX(RIGHT(MAHD, 4)) INTO ID from HOADON;
+			if ID >= 0 and ID < 9 THEN 
+				set MAHDNEW = CONCAT('HD000',CONVERT((CONVERT(ID, UNSIGNED) + 1),CHAR));
+			ELSE IF ID >= 9 and ID < 99 THEN
+				SET MAHDNEW = CONCAT('HD00',CONVERT((CONVERT(ID, UNSIGNED) + 1),CHAR));
+			ELSE IF ID >= 99 and ID < 999 THEN
+				SET MAHDNEW = CONCAT('HD0',CONVERT((CONVERT(ID, UNSIGNED) + 1),CHAR));
+            ELSE IF ID >= 999 and ID < 9999 THEN
+				SET MAHDNEW = CONCAT('HD',CONVERT((CONVERT(ID, UNSIGNED) + 1),CHAR));
+				end if;
+				end if;
+				end if;
+			end if;
+	end if;
+	RETURN (MAHDNEW);
+END$$ 
+DELIMITER ;
 
-create trigger TD__CODE_KHACHHANG on _CODE_KHACHHANG for delete as
-begin
-    declare
-       @numrows  int,
-       @errno    int,
-       @errmsg   varchar(255)
+DROP TRIGGER IF EXISTS trigger_AUTO_ID_HD;
+DELIMITER $$
+CREATE TRIGGER trigger_AUTO_ID_HD
+    BEFORE INSERT
+    ON HOADON FOR EACH ROW
+BEGIN
+	SET NEW.MAHD = AUTO_IDHD();
+END$$    
+DELIMITER ;
 
-    select  @numrows = @@rowcount
-    if @numrows = 0
-       return
+/*----- AUTOID_SUKIEN ----*/
+DROP FUNCTION IF EXISTS AUTO_IDSK;
+DELIMITER $$
+CREATE FUNCTION AUTO_IDSK()
+RETURNS VARCHAR(6)
+DETERMINISTIC
+BEGIN
+	DECLARE MASKNEW VARCHAR(6);
+    declare ID VARCHAR(4);
+	IF (SELECT COUNT(MASK) FROM SUKIEN) = 0 THEN
+		SET MASKNEW = 'SK0001';
+	ELSE
+		SELECT MAX(RIGHT(MASK, 4)) INTO ID from SUKIEN;
+			if ID >= 0 and ID < 9 THEN 
+				set MASKNEW = CONCAT('SK000',CONVERT((CONVERT(ID, UNSIGNED) + 1),CHAR));
+			ELSE IF ID >= 9 and ID < 99 THEN
+				SET MASKNEW = CONCAT('SK00',CONVERT((CONVERT(ID, UNSIGNED) + 1),CHAR));
+			ELSE IF ID >= 99 and ID < 999 THEN
+				SET MASKNEW = CONCAT('SK0',CONVERT((CONVERT(ID, UNSIGNED) + 1),CHAR));
+            ELSE IF ID >= 999 and ID < 9999 THEN
+				SET MASKNEW = CONCAT('SK',CONVERT((CONVERT(ID, UNSIGNED) + 1),CHAR));
+				end if;
+				end if;
+				end if;
+			end if;
+	end if;
+	RETURN (MASKNEW);
+END$$ 
+DELIMITER ;
 
-    /*  Cannot delete parent "_CODE_KHACHHANG" if children still exist in "_CODE_HOADON"  */
-    if exists (select 1
-               from   _CODE_HOADON t2, deleted t1
-               where  t2.MAKH = t1.MAKH)
-       begin
-          select @errno  = 50006,
-                 @errmsg = 'Children still exist in "_CODE_HOADON". Cannot delete parent "_CODE_KHACHHANG".'
-          goto error
-       end
+DROP TRIGGER IF EXISTS trigger_AUTO_ID_SK;
+DELIMITER $$
+CREATE TRIGGER trigger_AUTO_ID_SK
+    BEFORE INSERT
+    ON SUKIEN FOR EACH ROW
+BEGIN
+	SET NEW.MASK = AUTO_IDSK();
+END$$    
+DELIMITER ;
 
+/*------------------- TINH TIEN HOA DON ----------------------------*/
 
-    return
+DROP TRIGGER IF EXISTS TRG_INSERT_CTHD;
+DELIMITER $$
+CREATE TRIGGER TRG_INSERT_CTHD
+    BEFORE INSERT
+    ON CTHD FOR EACH ROW
+BEGIN
+	SET @TONGTIEN = NEW.SOLUONG * (SELECT DONGIA FROM SANPHAM WHERE MASP = NEW.MASP);
+    update HOADON
+    SET TONGTIEN = TONGTIEN + @TONGTIEN
+	WHERE MAHD = NEW.MAHD;
+    update SANPHAM
+    SET SOLUONG = SOLUONG - NEW.SOLUONG
+	WHERE MASP = NEW.MASP;
+END$$    
+DELIMITER ;
 
-/*  Errors handling  */
-error:
-    raiserror @errno @errmsg
-    rollback  transaction
-end
-go
+DROP TRIGGER IF EXISTS TRG_UPDATE_CTHD;
+DELIMITER $$
+CREATE TRIGGER TRG_UPDATE_CTHD
+    BEFORE UPDATE
+    ON CTHD FOR EACH ROW
+BEGIN
+	IF(NEW.SOLUONG > OLD.SOLUONG) THEN
+		SET @TONGTIEN = (NEW.SOLUONG - OLD.SOLUONG) * (SELECT DONGIA FROM SANPHAM WHERE MASP = OLD.MASP);
+		UPDATE HOADON
+		SET TONGTIEN = TONGTIEN + @TONGTIEN
+		WHERE MAHD = OLD.MAHD;
+        UPDATE SANPHAM
+		SET SOLUONG = SOLUONG - (NEW.SOLUONG - OLD.SOLUONG)
+		WHERE MASP = NEW.MASP;
+	ELSE IF(NEW.SOLUONG < OLD.SOLUONG) THEN
+		SET @TONGTIEN = (OLD.SOLUONG - NEW.SOLUONG) * (SELECT DONGIA FROM SANPHAM WHERE MASP = OLD.MASP);
+		UPDATE HOADON
+		SET TONGTIEN = TONGTIEN - @TONGTIEN
+		WHERE MAHD = OLD.MAHD;
+        UPDATE SANPHAM
+		SET SOLUONG = SOLUONG + (OLD.SOLUONG - NEW.SOLUONG)
+		WHERE MASP = NEW.MASP;
+        END IF;
+        END IF;
+END$$    
+DELIMITER ;
 
+DROP TRIGGER IF EXISTS TRG_DELETE_CTHD;
+DELIMITER $$
+CREATE TRIGGER TRG_DELETE_CTHD
+    BEFORE DELETE
+    ON CTHD FOR EACH ROW
+BEGIN
+		SET @TONGTIEN = OLD.SOLUONG * (SELECT DONGIA FROM SANPHAM WHERE MASP = OLD.MASP);
+		UPDATE HOADON
+		SET TONGTIEN = TONGTIEN - @TONGTIEN	
+		WHERE MAHD = OLD.MAHD;
+        UPDATE SANPHAM
+		SET SOLUONG = SOLUONG + OLD.SOLUONG
+		WHERE MASP = OLD.MASP;
+END$$    
+DELIMITER ;
 
-create trigger TI__CODE_KHACHHANG on _CODE_KHACHHANG for insert as
-begin
-    declare
-       @maxcard  int,
-       @numrows  int,
-       @numnull  int,
-       @errno    int,
-       @errmsg   varchar(255)
-
-    select  @numrows = @@rowcount
-    if @numrows = 0
-       return
-
-    /*  Parent "_CODE_TAIKHOAN" must exist when inserting a child in "_CODE_KHACHHANG"  */
-    if update(TENDANGNHAP)
-    begin
-       if (select count(*)
-           from   _CODE_TAIKHOAN t1, inserted t2
-           where  t1.TENDANGNHAP = t2.TENDANGNHAP) != @numrows
-          begin
-             select @errno  = 50002,
-                    @errmsg = 'Parent does not exist in "_CODE_TAIKHOAN". Cannot create child in "_CODE_KHACHHANG".'
-             goto error
-          end
-    end
-    /*  The cardinality of Parent "_CODE_TAIKHOAN" in child "_CODE_KHACHHANG" cannot exceed 1 */
-    if update(TENDANGNHAP)
-    begin
-       select @maxcard = (select count(*)
-          from   _CODE_KHACHHANG old
-          where ins.TENDANGNHAP = old.TENDANGNHAP)
-       from  inserted ins
-       where ins.TENDANGNHAP is not null
-       group by ins.TENDANGNHAP
-       order by 1
-       if @maxcard > 1
-       begin
-          select @errno  = 50007,
-                 @errmsg = 'The maximum cardinality of a child has been exceeded! Cannot create child in "_CODE_KHACHHANG".'
-          goto error
-       end
-    end
-
-    return
-
-/*  Errors handling  */
-error:
-    raiserror @errno @errmsg
-    rollback  transaction
-end
-go
-
-
-create trigger TU__CODE_KHACHHANG on _CODE_KHACHHANG for update as
-begin
-   declare
-      @maxcard  int,
-      @numrows  int,
-      @numnull  int,
-      @errno    int,
-      @errmsg   varchar(255)
-
-      select  @numrows = @@rowcount
-      if @numrows = 0
-         return
-
-      /*  Parent "_CODE_TAIKHOAN" must exist when updating a child in "_CODE_KHACHHANG"  */
-      if update(TENDANGNHAP)
-      begin
-         if (select count(*)
-             from   _CODE_TAIKHOAN t1, inserted t2
-             where  t1.TENDANGNHAP = t2.TENDANGNHAP) != @numrows
-            begin
-               select @errno  = 50003,
-                      @errmsg = '_CODE_TAIKHOAN" does not exist. Cannot modify child in "_CODE_KHACHHANG".'
-               goto error
-            end
-      end
-      /*  The cardinality of Parent "_CODE_TAIKHOAN" in child "_CODE_KHACHHANG" cannot exceed 1 */
-      if update(TENDANGNHAP)
-      begin
-         select @maxcard = (select count(*)
-            from   _CODE_KHACHHANG old
-            where ins.TENDANGNHAP = old.TENDANGNHAP)
-         from  inserted ins
-         where ins.TENDANGNHAP is not null
-         group by ins.TENDANGNHAP
-         order by 1
-         if @maxcard > 1
-         begin
-            select @errno  = 50007,
-                   @errmsg = 'The maximum cardinality of a child has been exceeded! Cannot modify child in "_CODE_KHACHHANG".'
-            goto error
-         end
-      end
-      /*  Cannot modify parent code in "_CODE_KHACHHANG" if children still exist in "_CODE_HOADON"  */
-      if update(MAKH)
-      begin
-         if exists (select 1
-                    from   _CODE_HOADON t2, inserted i1, deleted d1
-                    where  t2.MAKH = d1.MAKH
-                     and  (i1.MAKH != d1.MAKH))
-            begin
-               select @errno  = 50005,
-                      @errmsg = 'Children still exist in "_CODE_HOADON". Cannot modify parent code in "_CODE_KHACHHANG".'
-               goto error
-            end
-      end
-
-
-      return
-
-/*  Errors handling  */
-error:
-    raiserror @errno @errmsg
-    rollback  transaction
-end
-go
-
-
-create trigger CLR_TRIGGER__CODE_NHANVIEN on _CODE_NHANVIEN  insert as
-external name %Assembly.GeneratedName%.
-go
-
-
-create trigger TD__CODE_NHANVIEN on _CODE_NHANVIEN for delete as
-begin
-    declare
-       @numrows  int,
-       @errno    int,
-       @errmsg   varchar(255)
-
-    select  @numrows = @@rowcount
-    if @numrows = 0
-       return
-
-    /*  Cannot delete parent "_CODE_NHANVIEN" if children still exist in "_CODE_HOADON"  */
-    if exists (select 1
-               from   _CODE_HOADON t2, deleted t1
-               where  t2.MANV = t1.MANV)
-       begin
-          select @errno  = 50006,
-                 @errmsg = 'Children still exist in "_CODE_HOADON". Cannot delete parent "_CODE_NHANVIEN".'
-          goto error
-       end
-
-
-    return
-
-/*  Errors handling  */
-error:
-    raiserror @errno @errmsg
-    rollback  transaction
-end
-go
-
-
-create trigger TI__CODE_NHANVIEN on _CODE_NHANVIEN for insert as
-begin
-    declare
-       @maxcard  int,
-       @numrows  int,
-       @numnull  int,
-       @errno    int,
-       @errmsg   varchar(255)
-
-    select  @numrows = @@rowcount
-    if @numrows = 0
-       return
-
-    /*  Parent "_CODE_TAIKHOAN" must exist when inserting a child in "_CODE_NHANVIEN"  */
-    if update(TENDANGNHAP)
-    begin
-       if (select count(*)
-           from   _CODE_TAIKHOAN t1, inserted t2
-           where  t1.TENDANGNHAP = t2.TENDANGNHAP) != @numrows
-          begin
-             select @errno  = 50002,
-                    @errmsg = 'Parent does not exist in "_CODE_TAIKHOAN". Cannot create child in "_CODE_NHANVIEN".'
-             goto error
-          end
-    end
-    /*  The cardinality of Parent "_CODE_TAIKHOAN" in child "_CODE_NHANVIEN" cannot exceed 1 */
-    if update(TENDANGNHAP)
-    begin
-       select @maxcard = (select count(*)
-          from   _CODE_NHANVIEN old
-          where ins.TENDANGNHAP = old.TENDANGNHAP)
-       from  inserted ins
-       where ins.TENDANGNHAP is not null
-       group by ins.TENDANGNHAP
-       order by 1
-       if @maxcard > 1
-       begin
-          select @errno  = 50007,
-                 @errmsg = 'The maximum cardinality of a child has been exceeded! Cannot create child in "_CODE_NHANVIEN".'
-          goto error
-       end
-    end
-
-    return
-
-/*  Errors handling  */
-error:
-    raiserror @errno @errmsg
-    rollback  transaction
-end
-go
-
-
-create trigger TU__CODE_NHANVIEN on _CODE_NHANVIEN for update as
-begin
-   declare
-      @maxcard  int,
-      @numrows  int,
-      @numnull  int,
-      @errno    int,
-      @errmsg   varchar(255)
-
-      select  @numrows = @@rowcount
-      if @numrows = 0
-         return
-
-      /*  Parent "_CODE_TAIKHOAN" must exist when updating a child in "_CODE_NHANVIEN"  */
-      if update(TENDANGNHAP)
-      begin
-         if (select count(*)
-             from   _CODE_TAIKHOAN t1, inserted t2
-             where  t1.TENDANGNHAP = t2.TENDANGNHAP) != @numrows
-            begin
-               select @errno  = 50003,
-                      @errmsg = '_CODE_TAIKHOAN" does not exist. Cannot modify child in "_CODE_NHANVIEN".'
-               goto error
-            end
-      end
-      /*  The cardinality of Parent "_CODE_TAIKHOAN" in child "_CODE_NHANVIEN" cannot exceed 1 */
-      if update(TENDANGNHAP)
-      begin
-         select @maxcard = (select count(*)
-            from   _CODE_NHANVIEN old
-            where ins.TENDANGNHAP = old.TENDANGNHAP)
-         from  inserted ins
-         where ins.TENDANGNHAP is not null
-         group by ins.TENDANGNHAP
-         order by 1
-         if @maxcard > 1
-         begin
-            select @errno  = 50007,
-                   @errmsg = 'The maximum cardinality of a child has been exceeded! Cannot modify child in "_CODE_NHANVIEN".'
-            goto error
-         end
-      end
-      /*  Cannot modify parent code in "_CODE_NHANVIEN" if children still exist in "_CODE_HOADON"  */
-      if update(MANV)
-      begin
-         if exists (select 1
-                    from   _CODE_HOADON t2, inserted i1, deleted d1
-                    where  t2.MANV = d1.MANV
-                     and  (i1.MANV != d1.MANV))
-            begin
-               select @errno  = 50005,
-                      @errmsg = 'Children still exist in "_CODE_HOADON". Cannot modify parent code in "_CODE_NHANVIEN".'
-               goto error
-            end
-      end
-
-
-      return
-
-/*  Errors handling  */
-error:
-    raiserror @errno @errmsg
-    rollback  transaction
-end
-go
-
-
-create trigger CLR_TRIGGER__CODE_TAIKHOAN on _CODE_TAIKHOAN  insert as
-external name %Assembly.GeneratedName%.
-go
-
-
-create trigger TD__CODE_TAIKHOAN on _CODE_TAIKHOAN for delete as
-begin
-    declare
-       @numrows  int,
-       @errno    int,
-       @errmsg   varchar(255)
-
-    select  @numrows = @@rowcount
-    if @numrows = 0
-       return
-
-    /*  Cannot delete parent "_CODE_TAIKHOAN" if children still exist in "_CODE_KHACHHANG"  */
-    if exists (select 1
-               from   _CODE_KHACHHANG t2, deleted t1
-               where  t2.TENDANGNHAP = t1.TENDANGNHAP)
-       begin
-          select @errno  = 50006,
-                 @errmsg = 'Children still exist in "_CODE_KHACHHANG". Cannot delete parent "_CODE_TAIKHOAN".'
-          goto error
-       end
-
-    /*  Cannot delete parent "_CODE_TAIKHOAN" if children still exist in "_CODE_NHANVIEN"  */
-    if exists (select 1
-               from   _CODE_NHANVIEN t2, deleted t1
-               where  t2.TENDANGNHAP = t1.TENDANGNHAP)
-       begin
-          select @errno  = 50006,
-                 @errmsg = 'Children still exist in "_CODE_NHANVIEN". Cannot delete parent "_CODE_TAIKHOAN".'
-          goto error
-       end
-
-
-    return
-
-/*  Errors handling  */
-error:
-    raiserror @errno @errmsg
-    rollback  transaction
-end
-go
-
-
-create trigger TU__CODE_TAIKHOAN on _CODE_TAIKHOAN for update as
-begin
-   declare
-      @numrows  int,
-      @numnull  int,
-      @errno    int,
-      @errmsg   varchar(255)
-
-      select  @numrows = @@rowcount
-      if @numrows = 0
-         return
-
-      /*  Cannot modify parent code in "_CODE_TAIKHOAN" if children still exist in "_CODE_KHACHHANG"  */
-      if update(TENDANGNHAP)
-      begin
-         if exists (select 1
-                    from   _CODE_KHACHHANG t2, inserted i1, deleted d1
-                    where  t2.TENDANGNHAP = d1.TENDANGNHAP
-                     and  (i1.TENDANGNHAP != d1.TENDANGNHAP))
-            begin
-               select @errno  = 50005,
-                      @errmsg = 'Children still exist in "_CODE_KHACHHANG". Cannot modify parent code in "_CODE_TAIKHOAN".'
-               goto error
-            end
-      end
-
-      /*  Cannot modify parent code in "_CODE_TAIKHOAN" if children still exist in "_CODE_NHANVIEN"  */
-      if update(TENDANGNHAP)
-      begin
-         if exists (select 1
-                    from   _CODE_NHANVIEN t2, inserted i1, deleted d1
-                    where  t2.TENDANGNHAP = d1.TENDANGNHAP
-                     and  (i1.TENDANGNHAP != d1.TENDANGNHAP))
-            begin
-               select @errno  = 50005,
-                      @errmsg = 'Children still exist in "_CODE_NHANVIEN". Cannot modify parent code in "_CODE_TAIKHOAN".'
-               goto error
-            end
-      end
-
-
-      return
-
-/*  Errors handling  */
-error:
-    raiserror @errno @errmsg
-    rollback  transaction
-end
-go
+DROP TRIGGER IF EXISTS TRG_UPDATE_HD;
+DELIMITER $$
+CREATE TRIGGER TRG_UPDATE_HD
+    BEFORE UPDATE
+    ON HOADON FOR EACH ROW
+BEGIN
+	SET @GIAMGIA = (SELECT PHANTRAMGIAMGIA FROM SUKIEN WHERE MASK = NEW.MASK);
+        SET NEW.THANHTIEN = NEW.TONGTIEN * (100 - @GIAMGIA) / 100 ;
+	
+END$$    
+DELIMITER ;
 
 /*------------------- INSERT ----------------------------*/
 
 INSERT INTO TAIKHOAN
 VALUES
-  ("Colby",6000),
-  ("Octavia",5548),
-  ("Allistair",7899),
-  ("Rafael",8491),
-  ("Cecilia",9981),
-  ("Quinn",6781),
-  ("Ivana",8985),
-  ("Timothy",9990),
-  ("Fallon",7910),
-  ("Cora",5010);
+  ("Colby",6000,"user"),
+  ("Octavia",5548,"user"),
+  ("Allistair",7899,"user"),
+  ("Rafael",8491,"user"),
+  ("Cecilia",9981,"user"),
+  ("Quinn",6781,"user"),
+  ("Ivana",8985,"user"),
+  ("Timothy",9990,"user"),
+  ("Fallon",7910,"user"),
+  ("Cora",5010,"user");
 INSERT INTO TAIKHOAN
 VALUES
-  ("Daryl",7978),
-  ("Bianca",3010),
-  ("Quentin",1606),
-  ("Cyrus",7032),
-  ("Castor",8016),
-  ("Eliana",1617),
-  ("Aurora",7762),
-  ("Evangeline",2316),
-  ("Malik",2035),
-  ("Blake",2426);
+  ("Daryl",7978,"user"),
+  ("Bianca",3010,"user"),
+  ("Quentin",1606,"user"),
+  ("Cyrus",7032,"user"),
+  ("Castor",8016,"user"),
+  ("Eliana",1617,"user"),
+  ("Aurora",7762,"user"),
+  ("Evangeline",2316,"user"),
+  ("Malik",2035,"user"),
+  ("Blake",2426,"user");
 INSERT INTO TAIKHOAN
 VALUES
-  ("Abdul",8813),
-  ("Joy",7125),
-  ("Hilda",3226),
-  ("Alexa",2941),
-  ("Priscilla",9562),
-  ("Xandra",2637),
-  ("Ronan",8686),
-  ("Wesley",2042),
-  ("Kathleen",3650),
-  ("Brittany",4733);
+  ("Abdul",8813,"user"),
+  ("Joy",7125,"user"),
+  ("Hilda",3226,"user"),
+  ("Alexa",2941,"user"),
+  ("Priscilla",9562,"user"),
+  ("Xandra",2637,"user"),
+  ("Ronan",8686,"user"),
+  ("Wesley",2042,"user"),
+  ("Kathleen",3650,"user"),
+  ("Brittany",4733,"user");
 INSERT INTO TAIKHOAN
 VALUES
-  ("Murphy",4511),
-  ("Rhea",2830),
-  ("Brendan",6759),
-  ("Jack",5851),
-  ("Yoko",8315),
-  ("Winifred",4986),
-  ("Candice",6682),
-  ("Marvin",8240),
-  ("Dexter",8675),
-  ("Angelica",2792);
+  ("Murphy",4511,"user"),
+  ("Rhea",2830,"user"),
+  ("Brendan",6759,"user"),
+  ("Jack",5851,"user"),
+  ("Yoko",8315,"user"),
+  ("Winifred",4986,"user"),
+  ("Candice",6682,"user"),
+  ("Marvin",8240,"user"),
+  ("Dexter",8675,"user"),
+  ("Angelica",2792,"user");
 INSERT INTO TAIKHOAN
 VALUES
-  ("Vernon",7937),
-  ("Maya",5139),
-  ("Timon",8182),
-  ("Kennan",5215),
-  ("Jade",1999),
-  ("Uriah",8954),
-  ("Hadley",9714),
-  ("Baxter",4673),
-  ("Rahim",7399),
-  ("Sade",9023);
+  ("Vernon",7937,"user"),
+  ("Maya",5139,"user"),
+  ("Timon",8182,"user"),
+  ("Kennan",5215,"user"),
+  ("Jade",1999,"user"),
+  ("Uriah",8954,"user"),
+  ("Hadley",9714,"user"),
+  ("Baxter",4673,"user"),
+  ("Rahim",7399,"user"),
+  ("Sade",9023,"user");
 INSERT INTO TAIKHOAN
 VALUES
-  ("Mallory",8265),
-  ("Mannix",5906),
-  ("Serena",5269),
-  ("Aimee",1439),
-  ("Carolyn",6765),
-  ("Cooper",8571),
-  ("Petra",4904),
-  ("Judith",6169),
-  ("Driscoll",6687),
-  ("Shelly",3380),
-  ("Elijah",1548),
-  ("Merritt",7034),
-  ("Drew",7636),
-  ("Macon",7497);
+  ("Mallory",8265,"user"),
+  ("Mannix",5906,"user"),
+  ("Serena",5269,"user"),
+  ("Aimee",1439,"user"),
+  ("Carolyn",6765,"user"),
+  ("Cooper",8571,"user"),
+  ("Petra",4904,"user"),
+  ("Judith",6169,"user"),
+  ("Driscoll",6687,"user"),
+  ("Shelly",3380,"user"),
+  ("Elijah",1548,"user"),
+  ("Merritt",7034,"user"),
+  ("Drew",7636,"user"),
+  ("Macon",7497,"user");
 
 INSERT INTO TAIKHOAN
 VALUES
-  ("Victor",8857),
-  ("Gay",5785),
-  ("Illana",6594),
-  ("Avram",9782),
-  ("Basil",1524),
-  ("Uriak",2073),
-  ("Noelle",4806),
-  ("Deacon",3146),
-  ("Conan",2562),
-  ("Lilah",8847);
+  ("Victor",8857,"admin"),
+  ("Gay",5785,"admin"),
+  ("Illana",6594,"admin"),
+  ("Avram",9782,"admin"),
+  ("Basil",1524,"admin"),
+  ("Uriak",2073,"admin"),
+  ("Noelle",4806,"admin"),
+  ("Deacon",3146,"admin"),
+  ("Conan",2562,"admin"),
+  ("Lilah",8847,"admin");
 INSERT INTO TAIKHOAN
 VALUES
-  ("Gavin",7779),
-  ("Felix",4789),
-  ("Sydnee",9427),
-  ("Shana",7435),
-  ("Callie",3525),
-  ("Deanna",2919),
-  ("Rebekah",8938),
-  ("Cara",5804),
-  ("Ali",6494),
-  ("William",1175);
+  ("Gavin",7779,"admin"),
+  ("Felix",4789,"admin"),
+  ("Sydnee",9427,"admin"),
+  ("Shana",7435,"admin"),
+  ("Callie",3525,"admin"),
+  ("Deanna",2919,"admin"),
+  ("Rebekah",8938,"admin"),
+  ("Cara",5804,"admin"),
+  ("Ali",6494,"admin"),
+  ("William",1175,"admin");
 
 INSERT INTO KHACHHANG
 VALUES
@@ -1155,18 +895,4 @@ VALUES
   ("","Cara","Cara Short","1979-01-09","NỮ","QL","7009 Sem St.","2020-03-22","0607545085"),
   ("","Ali","Ali Mercer","1990-02-09","NỮ","NV","477-848 Eget St.","2020-06-13","0632388282"),
   ("","William","William Foley","1992-02-06","NỮ","NV","Ap #536-3711 Litora Ave","2020-06-21","0619414581");
-
-INSERT INTO NHANVIEN
-VALUES
-("","Drew","DEMO","2000-01-01","NAM","QL","DEMO","2022-02-02","0123456789");
-
-INSERT INTO KHACHHANG
-VALUES
-("","Macon","DEMO","0123456789","DEMO@GMAIL.COM","NAM");
-use laptop;
-delete from NHANVIEN where MANV like 'NV%';
-INSERT INTO BONHORAM
-VALUES
-("",""),
-();
 
