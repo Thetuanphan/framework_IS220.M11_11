@@ -9096,28 +9096,25 @@ h1, h2, h3, h4, h5,
 
 .nav-pills {
   width: 100%;
-  display: block; 
-  text-align: center;
-}
+  display: block; }
   .nav-pills p {
     margin-bottom: 0; }
-    .nav-pills .nav-link {
-        /*padding: 35px 30px !important;*/
-        border-radius: 0;
-        margin-bottom: 0;
-        color: #000000;
-        font-size: 16px;
-        font-weight: 700;
-        position: relative;
-        display: inline-block;
-        border: 1px solid transparent;
-        background: rgba(0, 0, 0, 0.05);
-        width: 33%;
-        -webkit-border-radius: 0;
-        -moz-border-radius: 0;
-        -ms-border-radius: 0;
-        border-radius: 0;
-    }
+  .nav-pills .nav-link {
+    padding: 35px 30px !important;
+    border-radius: 0;
+    margin-bottom: 0;
+    color: #000000;
+    font-size: 22px;
+    font-weight: 700;
+    position: relative;
+    display: inline-block;
+    border: 1px solid transparent;
+    background: rgba(0, 0, 0, 0.05);
+    width: 33%;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    -ms-border-radius: 0;
+    border-radius: 0; }
     .nav-pills .nav-link:after {
       position: absolute;
       bottom: -10px;
