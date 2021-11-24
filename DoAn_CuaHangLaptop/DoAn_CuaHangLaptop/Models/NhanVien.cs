@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,7 +19,8 @@ namespace DoAn_CuaHangLaptop.Models
         string diaChi;
         DateTime ngayVL;
         string soDT;
-
+        string matKhau;
+        string xacNhanMatKhau;
         public NhanVien()
         {
         }
@@ -56,7 +59,7 @@ namespace DoAn_CuaHangLaptop.Models
         [Required]
         [Display(Name = "Chức Vụ")]
         public string ChucVu { get => chucVu; set => chucVu = value; }
-        [Required]
+
         [Display(Name = "Địa chỉ")]
         [StringLength(100, ErrorMessage = "Địa chỉ phải dưới 100 ký tự")]
         public string DiaChi { get => diaChi; set => diaChi = value; }
@@ -67,7 +70,18 @@ namespace DoAn_CuaHangLaptop.Models
         [Display(Name = "Số Điện thoại")]
         [StringLength(10, ErrorMessage = "Số điện thoại phải dưới 10 ký tự")]
         public string SoDT { get => soDT; set => soDT = value; }
-
-
+        [NotMapped]
+        [DataType(DataType.Password)]
+        [Required(ErrorMessage = "Vui lòng nhập vào mật khẩu")]
+        [Display(Name = "Mật Khẩu")]
+        [StringLength(20, ErrorMessage = "Mật khẩu phải dưới 20 ký tự")]
+        public string MatKhau { get => matKhau; set => matKhau = value; }
+        [NotMapped]
+        [DataType(DataType.Password)]
+        [Required(ErrorMessage = "Vui lòng nhập lại mật khẩu")]
+        [Compare("MatKhau", ErrorMessage = "Mật khẩu không trùng khớp")]
+        [Display(Name = "Xác nhận mật khẩu")]
+        [StringLength(20, ErrorMessage = "Mật khẩu phải dưới 20 ký tự")]
+        public string XacNhanMatKhau { get => xacNhanMatKhau; set => xacNhanMatKhau = value; }
     }
 }
