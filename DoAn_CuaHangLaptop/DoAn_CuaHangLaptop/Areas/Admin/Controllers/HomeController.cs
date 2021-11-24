@@ -6,9 +6,15 @@ using System.Threading.Tasks;
 
 namespace DoAn_CuaHangLaptop.Areas.Admin.Controllers
 {
+    [Area("Admin")]
     public class HomeController : Controller
     {
         public IActionResult Index()
+        {
+            return View();
+        }
+
+        public IActionResult ChiTietSanPham()
         {
             return View();
         }
