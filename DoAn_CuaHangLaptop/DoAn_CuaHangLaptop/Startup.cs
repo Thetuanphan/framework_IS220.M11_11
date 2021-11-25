@@ -66,18 +66,17 @@ namespace DoAn_CuaHangLaptop
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapAreaControllerRoute(
+                  name: "areas",
+                  areaName: "Admin",
+                  pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            app.UseEndpoints(routes =>
-            {
-                routes.MapControllerRoute(
-                  name: "areas",
-                  pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
-                );
-            });
+            
         }
     }
 }

@@ -17,3 +17,30 @@
     }, false);
 })();
 
+function sidebarActive() {
+    var element = document.getElementById(isClicked);
+    var danhmuc = document.getElementById("DanhMuc");
+    var CPU = document.getElementById("CPU");
+    var RAM = document.getElementById("RAM");
+    var congketnoi = document.getElementById("CongKetNoi");
+    var manhinh = document.getElementById("ManHinh");
+    var chitietsanpham = document.getElementById("ChiTietSanPham");
+
+    danhmuc.classList.add("nav-item");
+    CPU.classList.add("nav-item");
+    RAM.classList.add("nav-item");
+    congketnoi.classList.add("nav-item");
+    manhinh.classList.add("nav-item");
+    chitietsanpham.classList.add("nav-item");
+
+    element.classList.add("nav-item", "active");
+}
+
+const onClick = function () {
+
+    alert(this.id, this.innerHTML);
+}
+document.getElementById('DanhMuc').onclick = onClick;
+document.getElementById('CPU').onclick = onClick;
+document.getElementById('RAM').onclick = onClick;
+
