@@ -81,7 +81,7 @@ namespace DoAn_CuaHangLaptop.Controllers
         {
 
             LapTopContext context = HttpContext.RequestServices.GetService(typeof(DoAn_CuaHangLaptop.Models.LapTopContext)) as LapTopContext;
-            if (context.capNhatHoaDon(hd) != 0)
+            if (context.capNhatHoaDon(mahd,hd) != 0)
             {
                 TempData["AlertMessage"] = "Cập nhật thành công";
                 TempData["AlertType"] = "alert alert-success";
@@ -94,7 +94,7 @@ namespace DoAn_CuaHangLaptop.Controllers
 
 
         // POST: HoaDonController/Delete/5
-
+        [HttpPost]
         public ActionResult Delete(string mahd, HoaDon hd)
         {
 

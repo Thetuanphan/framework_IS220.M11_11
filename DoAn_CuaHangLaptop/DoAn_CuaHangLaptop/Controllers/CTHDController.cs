@@ -77,7 +77,7 @@ namespace DoAn_CuaHangLaptop.Controllers
         public ActionResult Edit(string mahd, string masp, CTHD cthd)
         {
             LapTopContext context = HttpContext.RequestServices.GetService(typeof(DoAn_CuaHangLaptop.Models.LapTopContext)) as LapTopContext;
-            if (context.capNhatCTHD(cthd) != 0)
+            if (context.capNhatCTHD(mahd,masp,cthd) != 0)
             {
                 TempData["AlertMessage"] = "Cập nhật thành công";
                 TempData["AlertType"] = "alert alert-success";
@@ -89,7 +89,7 @@ namespace DoAn_CuaHangLaptop.Controllers
 
 
         // POST: CTHDController/Delete/5
-
+        [HttpPost]
         public ActionResult Delete(string mahd, string masp, CTHD cthd)
         {
 

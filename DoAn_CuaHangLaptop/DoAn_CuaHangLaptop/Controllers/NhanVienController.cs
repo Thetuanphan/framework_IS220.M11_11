@@ -74,19 +74,19 @@ namespace DoAn_CuaHangLaptop.Controllers
         {
 
             LapTopContext context = HttpContext.RequestServices.GetService(typeof(DoAn_CuaHangLaptop.Models.LapTopContext)) as LapTopContext;
-            if (context.capNhatNhanVien(nvien) == 0)
+            if (context.capNhatNhanVien(manv,nvien) == 0)
             {
                 ModelState.AddModelError("", "Người lao động phải lớn hơn 16 tuổi");
             }
             else
             {
-                context.capNhatNhanVien(nvien);
+                context.capNhatNhanVien(manv,nvien);
                 TempData["AlertMessage"] = "Cập nhật thành công";
                 TempData["AlertType"] = "alert alert-success";
                 return RedirectToAction("Index");
             }
 
-            return View(nvien);
+            return View();
 
         }
 
@@ -100,7 +100,7 @@ namespace DoAn_CuaHangLaptop.Controllers
         }
 
         // POST: NhanVienController/Delete/5
-
+        [HttpPost]
         public ActionResult Delete(string manv, string tendangnhap)
         {
 

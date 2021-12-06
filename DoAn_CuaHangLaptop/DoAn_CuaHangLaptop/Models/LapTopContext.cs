@@ -1268,7 +1268,7 @@ namespace DoAn_CuaHangLaptop.Models
             return nv;
         }
 
-        public int capNhatNhanVien(NhanVien nv)
+        public int capNhatNhanVien(string manv,NhanVien nv)
         {
             int count = 0;
             if (!ktNgayVL(nv.NgaySinh, nv.NgayVL))
@@ -1300,7 +1300,7 @@ namespace DoAn_CuaHangLaptop.Models
                     cmd.Parameters.AddWithValue("DIACHI", nv.DiaChi?.ToString());
                     cmd.Parameters.AddWithValue("NGAYVL", nv.NgayVL);
                     cmd.Parameters.AddWithValue("SODT", nv.SoDT?.ToString());
-                    cmd.Parameters.AddWithValue("MANV", nv.MaNV.ToString());
+                    cmd.Parameters.AddWithValue("MANV", manv.ToString());
                     cmd.ExecuteNonQuery();
                     count++;
                 }
@@ -1413,7 +1413,7 @@ namespace DoAn_CuaHangLaptop.Models
             }
             return hd;
         }
-        public int capNhatHoaDon(HoaDon hd)
+        public int capNhatHoaDon(string mahd,HoaDon hd)
         {
             int count = 0;
             using (MySqlConnection conn = GetConnection())
@@ -1432,7 +1432,7 @@ namespace DoAn_CuaHangLaptop.Models
                 cmd.Parameters.AddWithValue("@manv", hd.MaNV.ToString());
                 cmd.Parameters.AddWithValue("@mask", hd.MaSK.ToString());
                 cmd.Parameters.AddWithValue("@diachigiaohang", hd.DiaChiGiaoHang?.ToString());
-                cmd.Parameters.AddWithValue("@mahd", hd.MaHD);
+                cmd.Parameters.AddWithValue("@mahd", mahd.ToString());
                 cmd.ExecuteNonQuery();
                 count++;
             }
@@ -1574,7 +1574,7 @@ namespace DoAn_CuaHangLaptop.Models
             }
             return cthd;
         }
-        public int capNhatCTHD(CTHD cthd)
+        public int capNhatCTHD(string mahd, string masp,CTHD cthd)
         {
             int count = 0;
             if (!ktSoLuongSP(cthd.MaSP, cthd.SoLuong))
@@ -1592,8 +1592,8 @@ namespace DoAn_CuaHangLaptop.Models
                                    WHERE `MAHD` = @mahd and masp = @masp ;";
 
                     MySqlCommand cmd = new MySqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@mahd", cthd.MaHD.ToString());
-                    cmd.Parameters.AddWithValue("@masp", cthd.MaSP.ToString());
+                    cmd.Parameters.AddWithValue("@mahd", mahd.ToString());
+                    cmd.Parameters.AddWithValue("@masp", masp.ToString());
                     cmd.Parameters.AddWithValue("@soluong", cthd.SoLuong);
                     cmd.ExecuteNonQuery();
                     count++;
