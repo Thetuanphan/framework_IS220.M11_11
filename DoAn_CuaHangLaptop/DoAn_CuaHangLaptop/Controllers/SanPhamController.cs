@@ -12,7 +12,15 @@ namespace DoAn_CuaHangLaptop.Controllers
         public IActionResult Index()
         {
             LapTopContext context = HttpContext.RequestServices.GetService(typeof(DoAn_CuaHangLaptop.Models.LapTopContext)) as LapTopContext;
+           
             return View(context.LayDSSanPham());
+        }
+
+        public IActionResult Shop()
+        {
+            LapTopContext context = HttpContext.RequestServices.GetService(typeof(DoAn_CuaHangLaptop.Models.LapTopContext)) as LapTopContext;
+            ViewBag.dsSP = context.LayDSSanPham();
+            return View();
         }
         [HttpGet]
         public ActionResult Create()

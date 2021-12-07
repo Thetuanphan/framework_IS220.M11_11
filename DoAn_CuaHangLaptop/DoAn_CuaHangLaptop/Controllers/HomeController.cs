@@ -34,10 +34,7 @@ namespace DoAn_CuaHangLaptop.Controllers
             return View();
         }
 
-        public IActionResult Shop()
-        {
-            return View();
-        }
+       
         public IActionResult Contact()
         {
             return View();
