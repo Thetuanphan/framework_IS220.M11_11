@@ -10,8 +10,8 @@ namespace DoAn_CuaHangLaptop.Models
     {
         string maBXL;
         string congNgheCPU;
-        int soNhan;
-        int soLuong;
+        int? soNhan;
+        int? soLuong;
         string tocDoCPU;
         string tocDoToiDa;
         string boNhoDem;
@@ -39,10 +39,10 @@ namespace DoAn_CuaHangLaptop.Models
         public string CongNgheCPU { get => congNgheCPU; set => congNgheCPU = value; }
         [Required]
         [Display(Name = "Số nhân")]
-        public int SoNhan { get => soNhan; set => soNhan = value; }
+        public int? SoNhan { get => soNhan; set => soNhan = value; }
         [Required]
         [Display(Name = "Số luồng")]
-        public int SoLuong { get => soLuong; set => soLuong = value; }
+        public int? SoLuong { get => soLuong; set => soLuong = value; }
         [Required]
         [Display(Name = "Tốc độ CPU")]
         public string TocDoCPU { get => tocDoCPU; set => tocDoCPU = value; }

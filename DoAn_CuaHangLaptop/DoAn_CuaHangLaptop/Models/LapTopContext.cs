@@ -57,7 +57,8 @@ namespace DoAn_CuaHangLaptop.Models
             {
                 return 0;
             }
-            else if (!ktEmail(kh.Email)){
+            else if (!ktEmail(kh.Email))
+            {
                 return 1;
             }
             else
@@ -85,12 +86,12 @@ namespace DoAn_CuaHangLaptop.Models
         public int capNhatKhachHang(KhachHang kh)
         {
             int count = 0;
-           /* capNhatTaiKhoan(kh.TenDN, kh.MatKhau);
-            if (!ktEmail(kh.Email))
-            {
-                return 0;
-            }
-            else*/
+            /* capNhatTaiKhoan(kh.TenDN, kh.MatKhau);
+             if (!ktEmail(kh.Email))
+             {
+                 return 0;
+             }
+             else*/
             {
                 using (MySqlConnection conn = GetConnection())
                 {
@@ -197,7 +198,7 @@ namespace DoAn_CuaHangLaptop.Models
         }
         public bool kiemTraNgayBD_KT(DateTime ngaybd, DateTime ngaykt)
         {
-                int compare1 = DateTime.Compare(ngaybd, ngaykt);
+            int compare1 = DateTime.Compare(ngaybd, ngaykt);
             if (compare1 < 0)
             {
                 return true;
@@ -218,7 +219,7 @@ namespace DoAn_CuaHangLaptop.Models
                 //string query = "insert into khachhang value(?tendangnhap, ?tenkh, ?sodt, ?email, ?gioitinh) ";//ON DUPLICATE KEY UPDATE MaKH = ?makh
                 MySqlCommand cmd = new MySqlCommand(query, conn);
                 //cmd.Parameters.AddWithValue("makh", kh.MaKH.ToString());
-                cmd.Parameters.AddWithValue("mask","");
+                cmd.Parameters.AddWithValue("mask", "");
                 cmd.Parameters.AddWithValue("tensk", sk.TenSK.ToString());
                 cmd.Parameters.AddWithValue("phanTramGiamGia", Convert.ToInt32(sk.PhanTramGiamGia));
                 cmd.Parameters.AddWithValue("ngayBD", sk.NgayBD);
@@ -550,8 +551,8 @@ namespace DoAn_CuaHangLaptop.Models
                     {
                         BXL.MaBXL = reader["MABXL"].ToString();
                         BXL.CongNgheCPU = reader["CONGNGHECPU"]?.ToString();
-                        BXL.SoNhan = Convert.ToInt32(reader["SONHAN"]);
-                        BXL.SoLuong = Convert.ToInt32(reader["SOLUONG"]);
+                        BXL.SoNhan = Convert.IsDBNull(reader["SONHAN"]) ? null : (int?)reader["SONHAN"];
+                        BXL.SoLuong = Convert.IsDBNull(reader["SOLUONG"]) ? null : (int?)reader["SOLUONG"];
                         BXL.TocDoCPU = reader["TocDoCPU"]?.ToString();
                         BXL.TocDoToiDa = reader["TocDoToiDa"]?.ToString();
                         BXL.BoNhoDem = reader["BoNhoDem"]?.ToString();
@@ -1090,7 +1091,7 @@ namespace DoAn_CuaHangLaptop.Models
             }
 
         }
-        
+
         public int capNhatTaiKhoan(string tendangnhap, string matkhau)
         {
             int count = 0;
@@ -1268,7 +1269,7 @@ namespace DoAn_CuaHangLaptop.Models
             return nv;
         }
 
-        public int capNhatNhanVien(string manv,NhanVien nv)
+        public int capNhatNhanVien(string manv, NhanVien nv)
         {
             int count = 0;
             if (!ktNgayVL(nv.NgaySinh, nv.NgayVL))
@@ -1413,7 +1414,7 @@ namespace DoAn_CuaHangLaptop.Models
             }
             return hd;
         }
-        public int capNhatHoaDon(string mahd,HoaDon hd)
+        public int capNhatHoaDon(string mahd, HoaDon hd)
         {
             int count = 0;
             using (MySqlConnection conn = GetConnection())
@@ -1574,7 +1575,7 @@ namespace DoAn_CuaHangLaptop.Models
             }
             return cthd;
         }
-        public int capNhatCTHD(string mahd, string masp,CTHD cthd)
+        public int capNhatCTHD(string mahd, string masp, CTHD cthd)
         {
             int count = 0;
             if (!ktSoLuongSP(cthd.MaSP, cthd.SoLuong))
@@ -1616,5 +1617,137 @@ namespace DoAn_CuaHangLaptop.Models
             }
         }
         //===================END CTHD ===================================
+
+        //===================additional==================================
+        public List<SanPham> LayDSSPTheoTrang(int page)
+        {
+            List<SanPham> list = new List<SanPham>();
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                string query = "select * from SanPham LIMIT @page,12";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@page", (page - 1) * 12);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        list.Add(new SanPham()
+                        {
+                            MaSP = reader["MaSP"].ToString(),
+                            ManHinh = reader["ManHinh"].ToString(),
+                            BoXuLy = reader["BoXuLy"].ToString(),
+                            RAM = reader["RAM"].ToString(),
+                            CongKN = reader["CongKetNoi"].ToString(),
+                            DanhMuc = reader["DanhMuc"].ToString(),
+                            TenSP = reader["TenSP"].ToString(),
+                            SoLuong = Convert.ToInt32(reader["SoLuong"]),
+                            MauSac = reader["MauSac"].ToString(),
+                            OCung = reader["OCung"].ToString(),
+                            CardMH = reader["CardManHinh"].ToString(),
+                            DacBiet = reader["DacBiet"]?.ToString(),
+                            HDH = reader["HDH"].ToString(),
+                            ThietKe = reader["ThietKe"].ToString(),
+                            KichThuoc_TrongLuong = reader["KichThuoc_TrongLuong"].ToString(),
+                            Webcam = reader["Webcam"]?.ToString(),
+                            Pin = reader["Pin"].ToString(),
+                            RaMat = Convert.ToInt32(reader["RaMat"]),
+                            MoTa = reader["MoTa"].ToString(),
+                            DonGia = Convert.ToInt64(reader["DonGia"]),
+                            HinhAnh = reader["HinhAnh"].ToString(),
+                        });
+
+                    }
+                }
+            }
+            return list;
+        }
+        public List<SanPham> LayDSSPTheoDanhMuc(string madm)
+        {
+            List<SanPham> list = new List<SanPham>();
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                string query = "select * from SanPham where DANHMUC = @madm";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@madm", madm);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        list.Add(new SanPham()
+                        {
+                            MaSP = reader["MaSP"].ToString(),
+                            ManHinh = reader["ManHinh"].ToString(),
+                            BoXuLy = reader["BoXuLy"].ToString(),
+                            RAM = reader["RAM"].ToString(),
+                            CongKN = reader["CongKetNoi"].ToString(),
+                            DanhMuc = reader["DanhMuc"].ToString(),
+                            TenSP = reader["TenSP"].ToString(),
+                            SoLuong = Convert.ToInt32(reader["SoLuong"]),
+                            MauSac = reader["MauSac"].ToString(),
+                            OCung = reader["OCung"].ToString(),
+                            CardMH = reader["CardManHinh"].ToString(),
+                            DacBiet = reader["DacBiet"]?.ToString(),
+                            HDH = reader["HDH"].ToString(),
+                            ThietKe = reader["ThietKe"].ToString(),
+                            KichThuoc_TrongLuong = reader["KichThuoc_TrongLuong"].ToString(),
+                            Webcam = reader["Webcam"]?.ToString(),
+                            Pin = reader["Pin"].ToString(),
+                            RaMat = Convert.ToInt32(reader["RaMat"]),
+                            MoTa = reader["MoTa"].ToString(),
+                            DonGia = Convert.ToInt64(reader["DonGia"]),
+                            HinhAnh = reader["HinhAnh"].ToString(),
+                        });
+
+                    }
+                }
+            }
+            return list;
+        }
+        public List<SanPham> LayDSSPTheoDanhMucTheoTrang(string madm,int page)
+        {
+            List<SanPham> list = new List<SanPham>();
+            using (MySqlConnection conn = GetConnection())
+            {
+                conn.Open();
+                string query = "select * from SanPham where DANHMUC = @madm LIMIT @page,6 ;";
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@madm", madm);
+                cmd.Parameters.AddWithValue("@page", page * 6);
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        list.Add(new SanPham()
+                        {
+                            MaSP = reader["MaSP"].ToString(),
+                            ManHinh = reader["ManHinh"].ToString(),
+                            BoXuLy = reader["BoXuLy"].ToString(),
+                            RAM = reader["RAM"].ToString(),
+                            CongKN = reader["CongKetNoi"].ToString(),
+                            DanhMuc = reader["DanhMuc"].ToString(),
+                            TenSP = reader["TenSP"].ToString(),
+                            SoLuong = Convert.ToInt32(reader["SoLuong"]),
+                            MauSac = reader["MauSac"].ToString(),
+                            OCung = reader["OCung"].ToString(),
+                            CardMH = reader["CardManHinh"].ToString(),
+                            DacBiet = reader["DacBiet"]?.ToString(),
+                            HDH = reader["HDH"].ToString(),
+                            ThietKe = reader["ThietKe"].ToString(),
+                            KichThuoc_TrongLuong = reader["KichThuoc_TrongLuong"].ToString(),
+                            Webcam = reader["Webcam"]?.ToString(),
+                            Pin = reader["Pin"].ToString(),
+                            RaMat = Convert.ToInt32(reader["RaMat"]),
+                            MoTa = reader["MoTa"].ToString(),
+                            DonGia = Convert.ToInt64(reader["DonGia"]),
+                            HinhAnh = reader["HinhAnh"].ToString(),
+                        });
+
+                    }
+                }
+            }
+            return list;
+        }
     }
 }
