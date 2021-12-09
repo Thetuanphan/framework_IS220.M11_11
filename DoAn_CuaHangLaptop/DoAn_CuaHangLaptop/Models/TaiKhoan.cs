@@ -10,11 +10,12 @@ namespace DoAn_CuaHangLaptop.Models
     {
         string tenDangNhap;
         string matKhau;
-
-        public TaiKhoan(string tenDangNhap, string matKhau)
+        string quyen;
+        public TaiKhoan(string tenDangNhap, string matKhau,string quyen)
         {
             this.tenDangNhap = tenDangNhap;
             this.matKhau = matKhau;
+            this.quyen = quyen;
         }
 
         public TaiKhoan()
@@ -30,5 +31,6 @@ namespace DoAn_CuaHangLaptop.Models
         [Display(Name = "Mật khẩu")]
         [StringLength(20, ErrorMessage = "Mật khẩu phải dưới 20 ký tự")]
         public string MatKhau { get => matKhau; set => matKhau = value; }
+        public string Quyen { get => quyen; set => quyen = value; }
     }
 }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DoAn_CuaHangLaptop.Models;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace DoAn_CuaHangLaptop.Controllers
 {
@@ -32,20 +33,42 @@ namespace DoAn_CuaHangLaptop.Controllers
                 ViewBag.error = "Tên đăng nhập không tồn tại";
                 return View(tk);
             }
-            else if (tk.MatKhau == callfunc.MatKhau)
+            else if (GetMD5(tk.MatKhau) == callfunc.MatKhau)
             {
 
                 HttpContext.Session.SetString("usn", tk.TenDangNhap);
                 HttpContext.Session.SetString("pwd", tk.MatKhau);
-
-                return RedirectToAction("Index", "Home");
+                if(callfunc.Quyen == "user")
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    return LocalRedirect("/admin/Home/danhmuc");
+                }
             }
             else
             {
                 ViewBag.error = "Login failed";
-                return RedirectToAction("Login");
+                return RedirectToAction("Signin");
             }
         }
+
+        public static string GetMD5(string str)
+        {
+            MD5 md5 = new MD5CryptoServiceProvider();
+            byte[] fromData = Encoding.UTF8.GetBytes(str);
+            byte[] targetData = md5.ComputeHash(fromData);
+            string byte2String = null;
+
+            for (int i = 0; i < targetData.Length; i++)
+            {
+                byte2String += targetData[i].ToString("x2");
+
+            }
+            return byte2String;
+        }
+
         // GET: TaiKhoanController
 
         //public IActionResult Index()
@@ -54,7 +77,7 @@ namespace DoAn_CuaHangLaptop.Controllers
         //    ViewBag.dsTK = context.layDSTaiKhoan();
         //    return View();
         //}
-        
+
 
         // GET: TaiKhoanController/Details/5
         //public ActionResult Details(string tendangnhap)
@@ -117,7 +140,7 @@ namespace DoAn_CuaHangLaptop.Controllers
 
             LapTopContext context = HttpContext.RequestServices.GetService(typeof(DoAn_CuaHangLaptop.Models.LapTopContext)) as LapTopContext;
            
-            if (context.capNhatTaiKhoan(tk.TenDangNhap, tk.MatKhau) != 0)
+            if (context.capNhatTaiKhoan(tendangnhap, GetMD5(tk.MatKhau))!= 0)
             {
                 TempData["AlertMessage"] = "Cập nhật thành công";
                 TempData["AlertType"] = "alert alert-success";

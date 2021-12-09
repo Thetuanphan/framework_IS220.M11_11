@@ -63,7 +63,7 @@ namespace DoAn_CuaHangLaptop.Models
             }
             else
             {
-                taoTaiKhoan(kh.TenDN, kh.MatKhau);
+                taoTaiKhoan(kh.TenDN, kh.MatKhau,"user");
                 using (MySqlConnection conn = GetConnection())
                 {
                     conn.Open();
@@ -1071,7 +1071,7 @@ namespace DoAn_CuaHangLaptop.Models
         }
 
 
-        public int taoTaiKhoan(string tendangnhap, string matkhau)
+        public int taoTaiKhoan(string tendangnhap, string matkhau, string quyen)
         {
             int count = 0;
             if (!ktTenDangNhap(tendangnhap)) return 0;
@@ -1080,10 +1080,11 @@ namespace DoAn_CuaHangLaptop.Models
                 using (MySqlConnection conn = GetConnection())
                 {
                     conn.Open();
-                    string query = "INSERT INTO TAIKHOAN VALUES (@tenDangNhap,@matKhau) ";
+                    string query = "INSERT INTO TAIKHOAN VALUES (@tenDangNhap,@matKhau,@quyen) ";
                     MySqlCommand cmd = new MySqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@tenDangNhap", tendangnhap.ToString());
                     cmd.Parameters.AddWithValue("@matKhau", matkhau.ToString());
+                    cmd.Parameters.AddWithValue("@quyen", quyen.ToString());
                     cmd.ExecuteNonQuery();
                     count++;
                 }
@@ -1138,6 +1139,7 @@ namespace DoAn_CuaHangLaptop.Models
                     {
                         tk.TenDangNhap = reader["tendangnhap"].ToString();
                         tk.MatKhau = reader["matkhau"].ToString();
+                        tk.Quyen = reader["quyen"].ToString();
                     };
 
                 }
@@ -1232,7 +1234,7 @@ namespace DoAn_CuaHangLaptop.Models
             }
             else
             {
-                taoTaiKhoan(nv.TenDangNhap, nv.MatKhau);
+                taoTaiKhoan(nv.TenDangNhap, nv.MatKhau, "admin");
                 xuLyTaoNhanVien(nv);
                 count++;
             }
