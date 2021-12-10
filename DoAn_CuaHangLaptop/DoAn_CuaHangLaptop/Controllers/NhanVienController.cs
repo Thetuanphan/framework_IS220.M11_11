@@ -4,11 +4,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DoAn_CuaHangLaptop.Models;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace DoAn_CuaHangLaptop.Controllers
 {
     public class NhanVienController : Controller
     {
+        public static string GetMD5(string str)
+        {
+            MD5 md5 = new MD5CryptoServiceProvider();
+            byte[] fromData = Encoding.UTF8.GetBytes(str);
+            byte[] targetData = md5.ComputeHash(fromData);
+            string byte2String = null;
+
+            for (int i = 0; i < targetData.Length; i++)
+            {
+                byte2String += targetData[i].ToString("x2");
+
+            }
+            return byte2String;
+        }
         public IActionResult Index()
         {
             LapTopContext context = HttpContext.RequestServices.GetService(typeof(DoAn_CuaHangLaptop.Models.LapTopContext)) as LapTopContext;
@@ -32,6 +48,7 @@ namespace DoAn_CuaHangLaptop.Controllers
             {
                 return View(nv);
             }
+            nv.MatKhau = GetMD5(nv.MatKhau);
             int temp = context.taoNhanVien(nv);
             if (temp == 0)
             {

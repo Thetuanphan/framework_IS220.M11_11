@@ -5,12 +5,28 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace DoAn_CuaHangLaptop.Controllers
 {
     public class KhachHangController : Controller
     {
+        public static string GetMD5(string str)
+        {
+            MD5 md5 = new MD5CryptoServiceProvider();
+            byte[] fromData = Encoding.UTF8.GetBytes(str);
+            byte[] targetData = md5.ComputeHash(fromData);
+            string byte2String = null;
+
+            for (int i = 0; i < targetData.Length; i++)
+            {
+                byte2String += targetData[i].ToString("x2");
+
+            }
+            return byte2String;
+        }
         // GET: KhachHangController
         public IActionResult Index()
         {
@@ -44,18 +60,19 @@ namespace DoAn_CuaHangLaptop.Controllers
             {
                 return View(kh);
             }
-
-            if (context.taoKhachHang(kh) == 0)
+            kh.MatKhau = GetMD5(kh.MatKhau);
+            int temp = context.taoKhachHang(kh);
+            if (temp == 0)
             {
                 ModelState.AddModelError("", "Tên đăng nhập đã tồn tại");
             }
-            else if (context.taoKhachHang(kh) == 1)
+            else if (temp == 1)
             {
                 ModelState.AddModelError("", "Email đã tồn tại");
             }
             else
             {
-                return RedirectToAction("Login","TaiKhoan");
+                return RedirectToAction("Signin","TaiKhoan");
             }
             return View(kh);
         }
