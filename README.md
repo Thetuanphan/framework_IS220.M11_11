@@ -10,3 +10,6 @@ https://cuahanglaptop.azurewebsites.net
 
 - Link deploy heroku (builpack: https://github.com/jincod/dotnetcore-buildpack):
 https://cuahanglaptop.herokuapp.com/
+
+
+- Sửa giúp cái footer cách xuống 2em.
