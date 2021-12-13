@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DoAn_CuaHangLaptop.Models;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.AspNetCore.Http;
 
 namespace DoAn_CuaHangLaptop
 {
@@ -40,6 +42,8 @@ namespace DoAn_CuaHangLaptop
             });
 
             services.AddControllersWithViews();
+
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,8 +62,8 @@ namespace DoAn_CuaHangLaptop
             app.UseHttpsRedirection();
             app.UseStaticFiles(); 
 
-            app.UseSession(); 
-
+            app.UseSession();
+            
             app.UseRouting();
 
             app.UseAuthorization();
