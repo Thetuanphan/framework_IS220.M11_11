@@ -15,7 +15,19 @@ namespace DoAn_CuaHangLaptop.Controllers
         //GET: LOGIN
         public IActionResult Signin()
         {
-            return View();
+            var tdn = "tendangnhap";
+            var mk = "matkhau";
+            var usncok = Request.Cookies[tdn];
+            var pwncok = Request.Cookies[mk];
+            if (string.IsNullOrEmpty(usncok) && string.IsNullOrEmpty(pwncok))
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
+           
         }
         //POST : LOGIN
         [HttpPost]
@@ -38,7 +50,13 @@ namespace DoAn_CuaHangLaptop.Controllers
 
                 HttpContext.Session.SetString("usn", tk.TenDangNhap);
                 HttpContext.Session.SetString("pwd", tk.MatKhau);
-                if(callfunc.Quyen == "user")
+                CookieOptions options = new CookieOptions
+                {
+                    Expires = DateTime.Now.AddDays(5)
+                };
+                Response.Cookies.Append("tendangnhap", tk.TenDangNhap, options);
+                Response.Cookies.Append("matkhau", GetMD5(tk.MatKhau), options);
+                if (callfunc.Quyen == "user")
                 {
                     return RedirectToAction("Index", "Home");
                 }

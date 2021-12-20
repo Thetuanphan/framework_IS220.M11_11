@@ -21,12 +21,23 @@ namespace DoAn_CuaHangLaptop.Controllers
 
         public IActionResult Index()
         {
-            var usn = HttpContext.Session.GetString("usn");
-            if (usn != null)
-            {
-                TempData["tdn"] = usn;
-            }
-            return View();
+            //var usn = HttpContext.Session.GetString("usn");
+            //if (usn != null)
+            //{
+            //    TempData["tdn"] = usn;
+            //}
+            //var tdn = "tendangnhap";
+            //var mk = "matkhau";
+            //var usncok = Request.Cookies[tdn];
+            //var pwncok = Request.Cookies[mk];
+            //LapTopContext context = HttpContext.RequestServices.GetService(typeof(DoAn_CuaHangLaptop.Models.LapTopContext)) as LapTopContext;
+            //var callfunc = context.layThongTinTK(usncok);
+
+            //if (pwncok == callfunc.MatKhau)
+            //{
+            //    TempData["tdn"] = usncok;
+            //}
+                return View();
         }
 
         public IActionResult Privacy()
