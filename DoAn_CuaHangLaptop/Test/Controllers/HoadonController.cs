@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,9 +15,16 @@ namespace Test.Controllers
     {
         private readonly LapTopContext _context;
 
-        public HoadonController(LapTopContext context)
+        private readonly UserManager<AppUser> _userManager;
+
+        public HoadonController(LapTopContext context, UserManager<AppUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
+        }
+        private async Task<AppUser> GetCurrentUser()
+        {
+            return await _userManager.GetUserAsync(HttpContext.User);
         }
 
         // GET: Hoadon
@@ -167,6 +175,104 @@ namespace Test.Controllers
         private bool HoadonExists(int id)
         {
             return _context.Hoadon.Any(e => e.Mahd == id);
+        }
+
+        //Lay hóa đơn trạng thái chờ xác nhận
+        public async Task<IActionResult> HDChoXNAsync()
+        {
+            var user = await GetCurrentUser();
+            string id = user.Id;
+            List<Hoadon> listdata = _context.Hoadon.Where(hd => hd.Trangthai == 0).Where(hd=>hd.Makh==id).Select(hd => new Hoadon
+            {
+                Mahd = hd.Mahd,
+                Makh = hd.Makh,
+                Mask = hd.Mask,
+                Ngayhd = hd.Ngayhd,
+                Nguoinhan = hd.Nguoinhan,
+                nhanvienmanv = hd.nhanvienmanv,
+                Sdt = hd.Sdt,
+                Diachigiaohang = hd.Diachigiaohang,
+                Tongtien = hd.Tongtien,
+                Thanhtien = hd.Thanhtien,
+
+            }).ToList();
+
+
+            return View(listdata);
+        }
+
+        //Lấy hóa đơn trạng thái đã xác nhận
+        public async Task<IActionResult> HDXNAsync()
+        {
+            var user = await GetCurrentUser();
+            string id = user.Id;
+            List<Hoadon> listdata = _context.Hoadon.Where(hd => hd.Trangthai == 1).Where(hd => hd.Makh == id).Select(hd => new Hoadon
+            {
+                Mahd = hd.Mahd,
+                Makh = hd.Makh,
+                Mask = hd.Mask,
+                Ngayhd = hd.Ngayhd,
+                Nguoinhan = hd.Nguoinhan,
+                nhanvienmanv = hd.nhanvienmanv,
+                Sdt = hd.Sdt,
+                Diachigiaohang = hd.Diachigiaohang,
+                Tongtien = hd.Tongtien,
+                Thanhtien = hd.Thanhtien,
+
+            }).ToList();
+
+
+            return View(listdata);
+        }
+
+        //Lay hóa đơn trạng thái đang giao
+        public async Task<IActionResult> HDDangGiaoAsync()
+        {
+
+            var user = await GetCurrentUser();
+            string id = user.Id;
+            List<Hoadon> listdata = _context.Hoadon.Where(hd => hd.Trangthai == 0).Where(hd => hd.Makh == id).Select(hd => new Hoadon
+            {
+                Mahd = hd.Mahd,
+                Makh = hd.Makh,
+                Mask = hd.Mask,
+                Ngayhd = hd.Ngayhd,
+                Nguoinhan = hd.Nguoinhan,
+                nhanvienmanv = hd.nhanvienmanv,
+                Sdt = hd.Sdt,
+                Diachigiaohang = hd.Diachigiaohang,
+                Tongtien = hd.Tongtien,
+                Thanhtien = hd.Thanhtien,
+
+            }).ToList();
+
+
+            return View(listdata);
+        }
+
+        //Lay hóa đơn trạng thái đã giao
+        public async Task<IActionResult> HDDaGiaoAsync()
+        {
+
+            var user = await GetCurrentUser();
+            string id = user.Id;
+            List<Hoadon> listdata = _context.Hoadon.Where(hd => hd.Trangthai == 0).Where(hd => hd.Makh == id).Select(hd => new Hoadon
+            {
+                Mahd = hd.Mahd,
+                Makh = hd.Makh,
+                Mask = hd.Mask,
+                Ngayhd = hd.Ngayhd,
+                Nguoinhan = hd.Nguoinhan,
+                nhanvienmanv = hd.nhanvienmanv,
+                Sdt = hd.Sdt,
+                Diachigiaohang = hd.Diachigiaohang,
+                Tongtien = hd.Tongtien,
+                Thanhtien = hd.Thanhtien,
+
+            }).ToList();
+
+
+            return View(listdata);
         }
     }
 }

@@ -25,7 +25,7 @@ namespace Test.Controllers
 
         private readonly ILogger<SanphamController> _logger;
 
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<AppUser> _userManager;
 
         // Key lưu chuỗi json của Cart
         public const string CARTKEY = "cart";
@@ -57,14 +57,14 @@ namespace Test.Controllers
             string jsoncart = JsonConvert.SerializeObject(ls);
             session.SetString(CARTKEY, jsoncart);
         }
-        public SanphamController(LapTopContext context, IConfiguration config, UserManager<IdentityUser> userManager)
+        public SanphamController(LapTopContext context, IConfiguration config, UserManager<AppUser> userManager)
         {
             _context = context;
             _configuration = config;
             _userManager = userManager;
         }
 
-        private async Task<IdentityUser> GetCurrentUser()
+        private async Task<AppUser> GetCurrentUser()
         {
             return await _userManager.GetUserAsync(HttpContext.User);
         }
@@ -439,7 +439,7 @@ namespace Test.Controllers
             return View(GetCartItems());
         }
 
-      // Thêm sản phẩm vô cart
+        // Thêm sản phẩm vô cart
         public IActionResult AddToCart([FromRoute] string id)
         {
 
@@ -455,13 +455,11 @@ namespace Test.Controllers
             var cartitem = cart.Find(p => p.Sanpham.Masp == id);
             if (cartitem != null)
             {
-                // Đã tồn tại, tăng thêm 1
                 cartitem.SL++;
                 Console.WriteLine("ok 1 ");
             }
             else
             {
-                //  Thêm mới
                 cart.Add(new GioHang() { SL = 1, Sanpham = sanpham });
                 Console.WriteLine("ok 2");
             }
@@ -473,15 +471,47 @@ namespace Test.Controllers
             return RedirectToAction(nameof(Cart));
         }
 
+        [HttpPost]
+        public IActionResult AddToCartQuantity([FromForm] string id, [FromForm] int quantity)
+        {
+            Console.WriteLine("{0} is", id);
+            Console.WriteLine("{0} q", quantity);
+            var sanpham = _context.Sanpham
+                .Where(p => p.Masp == id)
+                .FirstOrDefault();
+
+            if (sanpham == null)
+                return NotFound("Không có sản phẩm");
+
+            // Xử lý đưa vào Cart ...
+            var cart = GetCartItems();
+            var cartitem = cart.Find(p => p.Sanpham.Masp == id);
+            if (cartitem != null)
+            {
+                cartitem.SL += quantity;
+                Console.WriteLine("ok 1 ");
+            }
+            else
+            {
+                cart.Add(new GioHang() { SL = quantity, Sanpham = sanpham });
+                Console.WriteLine("ok 2");
+            }
+
+            // Lưu cart vào Session
+            SaveCartSession(cart);
+
+            // Chuyển đến trang hiện thị Cart
+            return RedirectToAction(nameof(Cart));
+        }
         /// xóa item trong cart
-        
+
         public IActionResult RemoveCart([FromRoute] string id)
         {
             var cart = GetCartItems();
             var cartitem = cart.Find(p => p.Sanpham.Masp == id);
             if (cartitem != null)
             {
-               
+
                 cart.Remove(cartitem);
             }
 
@@ -490,30 +520,28 @@ namespace Test.Controllers
         }
 
         [HttpPost]
-        public IActionResult UpdateCart([FromForm] string id, [FromForm] int SL)
+        public IActionResult UpdateCart([FromForm] string id, [FromForm] int quantity)
         {
+            Console.WriteLine("Voupdate");
+            Console.WriteLine("{0}", quantity);
+            Console.WriteLine("{0}", id);
             // Cập nhật Cart thay đổi số lượng quantity ...
             var cart = GetCartItems();
             var cartitem = cart.Find(p => p.Sanpham.Masp == id);
             if (cartitem != null)
             {
-                cartitem.SL = SL;
+                cartitem.SL = quantity;
+                cart.Find(p => p.Sanpham.Masp == id).SL = cartitem.SL;
             }
+            //Console.WriteLine("{0}", cart.Find(p => p.Sanpham.Masp == id).SL); 
             SaveCartSession(cart);
             // Trả về mã thành công (không có nội dung gì - chỉ để Ajax gọi)
-            return Ok();
+            return RedirectToAction(nameof(Cart));
         }
 
         public IActionResult CheckOut([FromForm] string email, [FromForm] string address)
         {
             var cart = GetCartItems();
-            //if (!string.IsNullOrEmpty(email))
-            //{
-            //    // hãy tạo cấu trúc db lưu lại đơn hàng và xóa cart khỏi session
-
-            //    ClearCart();
-            //    RedirectToAction(nameof(Index));
-            //}
 
             return View(cart);
         }
@@ -526,33 +554,33 @@ namespace Test.Controllers
             Console.WriteLine("{0}", diachi);
             Console.WriteLine("{0}", sdt);
             Console.WriteLine("{0}", email);
-         
+
             //Xử lý khi đặt hàng
             var cart = GetCartItems();
             ViewData["email"] = email;
             ViewData["address"] = diachi;
             ViewData["phone"] = sdt;
             ViewData["cart"] = cart;
-            
+
             foreach (var item in cart)
             {
                 Console.WriteLine("{0}", item.SL);
             }
 
             var id = from hoadon in _context.Hoadon
-                      orderby hoadon.Mahd descending
-                      select hoadon.Mahd;
+                     orderby hoadon.Mahd descending
+                     select hoadon.Mahd;
             int temp;
             if (id.Count() == 0)
             {
                 temp = 1;
             }
             else
-            {              
+            {
                 temp = id.First();
                 temp++;
             }
-            Console.WriteLine("{0}",temp);
+            Console.WriteLine("{0}", temp);
             if (!string.IsNullOrEmpty(email))
             {
                 Hoadon hd = new Hoadon();
@@ -561,6 +589,7 @@ namespace Test.Controllers
                 hd.Nguoinhan = hoten;
                 hd.Diachigiaohang = diachi;
                 hd.Sdt = sdt;
+                hd.Ngayhd = DateTime.Now;
                 var user = await GetCurrentUser();
                 hd.Makh = user.Id;
                 foreach (var item in cart)

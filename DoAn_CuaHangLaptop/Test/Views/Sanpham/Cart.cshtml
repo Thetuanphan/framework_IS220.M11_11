@@ -23,6 +23,7 @@
             <div class="row">
                 <div class="col-md-12 ftco-animate">
                     <div class="cart-list">
+
                         <table class="table">
                             <thead class="thead-primary">
                                 <tr class="text-center">
@@ -37,6 +38,7 @@
                             <tbody>
                                 @foreach (var item in Model)
                                 {
+
                                     decimal thanhtien = item.SL * (decimal)item.Sanpham.Dongia;
                                     total += thanhtien;
                                     <tr class="text-center">
@@ -50,12 +52,26 @@
                                         </td>
 
                                         <td class="price">@item.Sanpham.Dongia?.ToString("#,##0 VNĐ")</td>
-
+                                        <form asp-action="UpdateCart" method="post">
                                         <td class="quantity">
+                                            <div class="w-100"></div>
                                             <div class="input-group mb-3">
-                                                <input type="text" name="quantity" class="quantity form-control input-number" value="@item.SL" min="1" max="100">
+
+                                                <div style="display:none">
+                                                    <input type="text" id="id" name="id" value="@item.Sanpham.Masp" />
+                                                </div>
+
+                                                <input type="text" id="quantity" name="quantity" class="quantity form-control input-number" value="@item.SL" min="1" max="100">
+                                                <span class="input-group-btn ml-2">
+                                                    <button class="btn btn-primary py-3 px-4" type="submit" data-type="plus" data-field="">
+                                                        cập nhật
+                                                    </button>
+                                                </span>
                                             </div>
+                                            <div class="w-100"></div>
+
                                         </td>
+                                        </form>
 
                                         <td class="total">@thanhtien.ToString("#,##0 VNĐ")</td>
                                     </tr>
@@ -64,6 +80,7 @@
                                 <!-- END TR-->
                             </tbody>
                         </table>
+
                     </div>
                 </div>
             </div>
@@ -96,4 +113,18 @@
 
     </section>
 }
+<script>
+
+    function giam() {
+        var i = document.getElementById('quantity').value;
+        i=i-1;
+        document.getElementById('quantity').value = i;
+    }
+
+    function tang() {
+        var i = document.getElementById('quantity').value;
+        i=i+1;
+        document.getElementById('quantity').value = i;
+    }
+</script>
 
