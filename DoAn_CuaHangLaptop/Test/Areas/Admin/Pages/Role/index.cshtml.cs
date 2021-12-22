@@ -12,8 +12,7 @@ using Test.Data;
 namespace App.Admin.Role
 {
     [Authorize(Roles = "admin")]
-   
-
+ 
     public class IndexModel : RolePageModel
     {
         public IndexModel(RoleManager<IdentityRole> roleManager, LapTopContext myBlogContext) : base(roleManager, myBlogContext)
