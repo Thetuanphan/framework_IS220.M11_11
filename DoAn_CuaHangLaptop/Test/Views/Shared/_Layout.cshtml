@@ -1,11 +1,13 @@
 ﻿@using Microsoft.AspNetCore.Identity
+
 @inject SignInManager<AppUser> SignInManager
 @inject UserManager<AppUser> UserManager
+
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Minishop - Free Bootstrap 4 Template by Colorlib</title>
+    <title>LaptopStore</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -85,24 +87,24 @@
                     @if (SignInManager.IsSignedIn(User))
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity.Name!</a>
+                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@User.Identity.Name!</a>
                         </li>
                         <li class="nav-item">
                             <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                                <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+                                <button type="submit" class="nav-link btn btn-link text-dark">Đăng xuất</button>
                             </form>
-                        </li>
 
+                        </li>
+                        
                     }
                     else
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Register</a>
+                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Đăng ký</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Đăng nhập</a>
                         </li>
-
                     }
                     @if (User.IsInRole("admin"))
                     {
@@ -110,7 +112,8 @@
                             <a class="nav-link text-dark" href="/admin/danhmucsanpham">Admin</a>
                         </li>
                     }
-                    <li class="nav-item cta cta-colored"><a asp-controller="SanPham" asp-action="Cart" class="nav-link"><span class="icon-shopping_cart"></span></a></li>
+                <li class="nav-item cta cta-colored"><a asp-controller="SanPham" asp-action="Cart" class="nav-link"><span class="icon-shopping_cart"></span></a></li>
+
                 </ul>
             </div>
         </div>
