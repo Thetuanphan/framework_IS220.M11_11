@@ -7,8 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Test.Data;
 using Test.Models;
-using Syncfusion.HtmlConverter;
-using Syncfusion.Pdf;
+
 
 namespace Test.Areas.Admin.Controllers
 {
