@@ -13,6 +13,7 @@ https://cuahanglaptop.herokuapp.com/
 
 
 - Để chạy email, sử dụng 2 đoạn code này trong cmd :
+- 
   dotnet add package MailKit
   
   dotnet add package MimeKit
