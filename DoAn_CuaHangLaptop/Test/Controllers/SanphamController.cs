@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +27,8 @@ namespace Test.Controllers
         private readonly ILogger<SanphamController> _logger;
 
         private readonly UserManager<AppUser> _userManager;
+
+        private readonly IEmailSender _sendMail;
 
         // Key lưu chuỗi json của Cart
         public const string CARTKEY = "cart";
@@ -57,11 +60,12 @@ namespace Test.Controllers
             string jsoncart = JsonConvert.SerializeObject(ls);
             session.SetString(CARTKEY, jsoncart);
         }
-        public SanphamController(LapTopContext context, IConfiguration config, UserManager<AppUser> userManager)
+        public SanphamController(LapTopContext context, IConfiguration config, UserManager<AppUser> userManager, IEmailSender sendMail)
         {
             _context = context;
             _configuration = config;
             _userManager = userManager;
+            _sendMail = sendMail;
         }
 
         private async Task<AppUser> GetCurrentUser()
@@ -645,16 +649,71 @@ namespace Test.Controllers
                 _context.SaveChanges();
                 int lastID = hd.Mahd;
 
+              
+                // gửi mail thử
+                string subject = "ĐƠN ĐẶT HÀNG";
+                string body =  "LaptopStore xin gửi đến bạn thông tin đơn mua hàng" +
+                               " <br></br> <div style=\" width: 700px; \">" +
+                               " <div style =\"width: 95%; padding: 10px;\" > " +
+                               " <h4 style = \"text-align: center;\" > ĐƠN MUA HÀNG</h4>" +
+                               " <p> Ngày mua: " + hd.Ngayhd + "</p>" +
+                               " <p> Họ tên: " + hoten + " </p> " +
+                               " <p> SĐT: " + sdt + "</p>" +
+                               " <p> Địa chỉ nhận hàng:  " + diachi + "</p>" +
+
+                               " <h4 style = \"text-align: center;\" > CHI TIẾT ĐƠN HÀNG </h4> " +
+                               "<table  style=\"width: 100%; border: 1px solid black; border-collapse: collapse; \"> " +
+                                     " <tr style = \" border:1px solid black; border-collapse: collapse;background-color: #fff200;color: #5f5f5f;\" > " +
+                                     " <th style = \" border:1px solid black; border-collapse: collapse;min-width:150px;\" > Sản phẩm </th>" +
+                                     " <th style = \" border:1px solid black; border-collapse: collapse;min-width:70px;\" > Số lượng </th> " +
+                                     " <th style = \" border:1px solid black; border-collapse: collapse;min-width:100px;\" > Đơn giá </th> " +
+                                     " <th style = \" border:1px solid black; border-collapse: collapse;min-width:100px;\" > Số tiền </th> " +
+                                     " </tr> ";
                 foreach (var item in cart)
                 {
                     Cthd ct = new Cthd();
                     ct.Mahd = lastID;
                     ct.Masp = item.Sanpham.Masp;
                     ct.Soluong = item.SL;
+                    long? tong = item.SL * item.Sanpham.Dongia;
                     _context.Add(ct);
                     _context.SaveChanges();
+
+                    body = body +
+                             " <tr style = \" border:1px solid black; border-collapse: collapse; \"> " +
+                                     " <th style = \" border:1px solid black; border-collapse: collapse;\" > "  + item.Sanpham.Tensp + "</th>" +
+                                     " <th style = \" border:1px solid black; border-collapse: collapse;\" > " + item.SL + "</th>" +
+                                     " <th style = \" border:1px solid black; border-collapse: collapse;\" > " + item.Sanpham.Dongia + "</th>" +
+                                     " <th style = \" border:1px solid black; border-collapse: collapse;\" > " + tong + "</th>" +
+                             " </tr> ";
                 }
                 Console.WriteLine("vô rồi đó");
+
+                body = body +
+                   " </table> " +
+                   " <p> </p>" +
+                   " <table style = \"text-align: center;  position:relative; left:70%; width:30%; border:1px solid black; border-collapse: collapse; \" > " +
+                        " <tr style = \" border:1px solid black;border-collapse: collapse;\" > " +
+                        "     <th style = \" border:1px solid black; border-collapse: collapse;\" > Thành tiền </th> " +
+                         "    <th style = \" border:1px solid black;\" > " + hd.Tongtien + " </th>" +
+                         " </tr> " +
+                         " <tr style = \" border:1px solid black;border-collapse: collapse;\" > "+
+                          "   <th style = \" border:1px solid black; border-collapse: collapse; \" > Giảm giá </th> " +
+                           "  <th style = \" border:1px solid black; \" > 0 </th> " +
+                          " </tr> " +
+                          " <tr style = \" border:1px solid black;border-collapse: collapse; background-color: #ff9100;color: white;line-height: 20px; \" > " +
+                            "   <th style = \" border:1px solid black; border-collapse: collapse;\" > Tổng tiền </th> " +
+                             "  <th style = \" border:1px solid black;\" >" + hd.Thanhtien + " </th> " +
+                          " </tr> " +
+                   " </table> " +
+                   " <p> Cảm ơn quý khách đã mua sắm tại LaptopStore, chúc quý khách một ngày vui vẻ! </p>" +
+                   " </div> " +
+                   " </div>";
+
+
+                    await _sendMail.SendEmailAsync(email, subject, body);
+
+                Console.WriteLine("gửi mail ok");
                 ClearCart();
                 RedirectToAction(nameof(Index));
             }
