@@ -1,0 +1,45 @@
+﻿@model IEnumerable<Test.Models.Sanpham>
+@{
+    ViewData["Title"] = "ThongKePost";
+}
+
+<div class="container-fluid">
+
+    <!-- Page Heading -->
+    <!-- DataTales Example -->
+    <div class="card shadow mb-4">
+
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Thống kê</h6>
+        </div>
+
+        <p></p>
+        <div class="card-body">
+            <h3>Thống kê sản phẩm bán được trong năm</h3>
+            <div class="d-flex justify-content-end">
+                Ngày lập hóa đơn : @ViewBag.Date
+            </div>
+            <table class="table table-bordered ">
+                <thead>
+                    <tr class="table-warning">
+                        <th scope="col">Tên sản phẩm</th>
+                        <th scope="col">Số lượng</th>
+                        <th scope="col">Đơn giá</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var i in Model)
+                    {
+
+                    <tr>
+                        <td>@i.Tensp</td>
+                        <td>@i.Soluong</td>
+                        <td>@i.Dongia?.ToString("#,##0 VND")</td>
+                    </tr>
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

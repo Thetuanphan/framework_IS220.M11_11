@@ -30,7 +30,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @item.Ngayhd?.ToString("dd/MM/yyyy")
+                @item.Ngayhd.ToString("dd/MM/yyyy")
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Nguoinhan)

@@ -411,18 +411,29 @@ namespace Test.Controllers
             }
             else
             {
-                tensp = tensp.Trim().ToLower();
-                string _tensp = "";
-                List<Sanpham> contextSP = lapTopContext.ToList();
-                foreach (Sanpham item in contextSP)
-                {
-                    _tensp = item.Tensp.Trim().ToLower();
-                    if (_tensp.Contains(tensp))
-                    {
-                        spList.Add(item);
-                    }
-
-                }
+                spList = _context.Sanpham.Where(sp => sp.Tensp.ToLower().Contains(tensp.ToLower())).Select(sp=> new Sanpham {
+                    Masp = sp.Masp,
+                    Manhinh = sp.Manhinh,
+                    Boxuly = sp.Boxuly,
+                    Ram = sp.Ram,
+                    Congketnoi = sp.Congketnoi,
+                    Danhmuc = sp.Danhmuc,
+                    Tensp = sp.Tensp,
+                    Soluong = sp.Soluong,
+                    Mausac = sp.Mausac,
+                    Ocung =sp.Ocung,
+                    Cardmanhinh = sp.Cardmanhinh,
+                    Dacbiet = sp.Dacbiet,
+                    Hdh = sp.Hdh,
+                    Thietke = sp.Thietke,
+                    KichthuocTrongluong = sp.KichthuocTrongluong,
+                    Webcam = sp.Webcam,
+                    Pin = sp.Pin,
+                    Ramat = sp.Ramat,
+                    Mota = sp.Mota,
+                    Dongia = sp.Dongia,
+                    Hinhanh = sp.Hinhanh,
+                }).ToList();
                 ViewBag.dmSP = _context.Danhmucsanpham.ToList();
             }
             return View(spList);
