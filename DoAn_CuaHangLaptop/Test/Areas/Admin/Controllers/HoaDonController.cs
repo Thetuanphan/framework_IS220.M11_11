@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Test.Data;
 using Test.Models;
+using Syncfusion.HtmlConverter;
+using Syncfusion.Pdf;
 
 namespace Test.Areas.Admin.Controllers
 {
@@ -53,7 +55,6 @@ namespace Test.Areas.Admin.Controllers
             return View(dsHd);
 
         }
-
         // GET: Admin/HoaDon/Details/5
         //public async Task<IActionResult> Details(int? id)
         //{
