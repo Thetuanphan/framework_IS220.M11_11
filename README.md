@@ -12,4 +12,6 @@ https://cuahanglaptop.azurewebsites.net
 https://cuahanglaptop.herokuapp.com/
 
 
-- Sửa giúp cái footer cách xuống 2em.
+- Để chạy email, sử dụng 2 đoạn code này trong cmd :
+  dotnet add package MailKit
+  dotnet add package MimeKit
