@@ -480,16 +480,26 @@ namespace Test.Controllers
                 .Where(p => p.Masp == id)
                 .FirstOrDefault();
 
+            var cart = GetCartItems();
+            var cartitem = cart.Find(p => p.Sanpham.Masp == id);
+
+
             if (sanpham == null)
                 return NotFound("Không có sản phẩm");
 
             // Xử lý đưa vào Cart ...
-            var cart = GetCartItems();
-            var cartitem = cart.Find(p => p.Sanpham.Masp == id);
             if (cartitem != null)
             {
-                cartitem.SL++;
-                Console.WriteLine("ok 1 ");
+                if (cartitem.SL + 1 > sanpham.Soluong)
+                {
+                    cartitem.SL = sanpham.Soluong;
+                    Console.WriteLine("cart bằng số lượng");
+                }
+                else
+                {
+                    cartitem.SL++;
+                    Console.WriteLine("ok 1 ");
+                }
             }
             else
             {            
@@ -499,7 +509,7 @@ namespace Test.Controllers
 
             // Lưu cart vào Session
             SaveCartSession(cart);
-
+            ViewData["Cart"] = "Thêm thành công!";
             // Chuyển đến trang hiện thị Cart
             return RedirectToAction(nameof(Cart));
         }
@@ -513,28 +523,52 @@ namespace Test.Controllers
                 .Where(p => p.Masp == id)
                 .FirstOrDefault();
 
-            if (sanpham == null)
-                return NotFound("Không có sản phẩm");
-
-            // Xử lý đưa vào Cart ...
             var cart = GetCartItems();
             var cartitem = cart.Find(p => p.Sanpham.Masp == id);
-            if (cartitem != null)
+
+            if (sanpham == null)
+                return NotFound("Không có sản phẩm");
+            if (sanpham.Soluong == 0)
             {
-                cartitem.SL+=quantity;
-                Console.WriteLine("ok 1 ");
+                return Redirect("/SanPham/ProducSingle");
             }
             else
             {
-                cart.Add(new GioHang() { SL = quantity, Sanpham = sanpham });
-                Console.WriteLine("ok 2");
+                //Kiểm tra số lượng thỏa mãn hay không
+                if (quantity > sanpham.Soluong)
+                {
+                    cartitem.SL = sanpham.Soluong;
+                    Console.WriteLine("quantity lớn hơn soluongsp");
+                }
+                else
+                {
+                    // Xử lý đưa vào Cart ...
+                    if (cartitem != null)
+                    {
+                        if (cartitem.SL + quantity > sanpham.Soluong)
+                        {
+                            cartitem.SL = sanpham.Soluong;
+                            Console.WriteLine("quantity + cart lớn hơn soluongsp");
+                        }
+                        else
+                        {
+                            cartitem.SL += quantity;
+                            Console.WriteLine("ok 1");
+                        }
+                    }
+                    else
+                    {
+                        cart.Add(new GioHang() { SL = quantity, Sanpham = sanpham });
+                        Console.WriteLine("ok 2");
+                    }
+                }
+
+                // Lưu cart vào Session
+                SaveCartSession(cart);
+
+                // Chuyển đến trang hiện thị Cart
+                return RedirectToAction(nameof(Cart));
             }
-
-            // Lưu cart vào Session
-            SaveCartSession(cart);
-
-            // Chuyển đến trang hiện thị Cart
-            return RedirectToAction(nameof(Cart));
         }
         /// xóa item trong cart
 
@@ -549,6 +583,7 @@ namespace Test.Controllers
             }
 
             SaveCartSession(cart);
+            ViewData["Cart"] = "Xóa thành công";
             return RedirectToAction(nameof(Cart));
         }
 
@@ -558,16 +593,28 @@ namespace Test.Controllers
             Console.WriteLine("Voupdate");
             Console.WriteLine("{0}", quantity);
             Console.WriteLine("{0}", id);
-            // Cập nhật Cart thay đổi số lượng quantity ...
+            Sanpham sp = _context.Sanpham.Find(id);
             var cart = GetCartItems();
             var cartitem = cart.Find(p => p.Sanpham.Masp == id);
-            if (cartitem != null)
+            if (quantity > sp.Soluong)
             {
-                cartitem.SL = quantity;
-                cart.Find(p => p.Sanpham.Masp == id).SL = cartitem.SL;
+                cartitem.SL = sp.Soluong;
+                ViewData["Cart"] = "Số lượng sản phẩm hiện tại không đủ";
             }
-            //Console.WriteLine("{0}", cart.Find(p => p.Sanpham.Masp == id).SL); 
+            else
+            {
+                // Cập nhật Cart thay đổi số lượng quantity ...
+               
+                if (cartitem != null)
+                {
+                    cartitem.SL = quantity;
+                    cart.Find(p => p.Sanpham.Masp == id).SL = cartitem.SL;
+                }
+                //Console.WriteLine("{0}", cart.Find(p => p.Sanpham.Masp == id).SL); 
+                //SaveCartSession(cart);
+            }
             SaveCartSession(cart);
+
             // Trả về mã thành công (không có nội dung gì - chỉ để Ajax gọi)
             return RedirectToAction(nameof(Cart));
         }
@@ -677,6 +724,11 @@ namespace Test.Controllers
                     ct.Soluong = item.SL;
                     long? tong = item.SL * item.Sanpham.Dongia;
                     _context.Add(ct);
+                    _context.SaveChanges();
+
+                    // Cập nhật lại số lượng sản phẩm
+                    Sanpham sp = _context.Sanpham.Where(sp => sp.Masp == item.Sanpham.Masp).First();
+                    sp.Soluong -= item.SL;                  
                     _context.SaveChanges();
 
                     body = body +

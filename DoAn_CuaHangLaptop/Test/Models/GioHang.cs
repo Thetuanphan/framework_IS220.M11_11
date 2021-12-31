@@ -8,6 +8,6 @@ namespace Test.Models
     public class GioHang
     {
         public Sanpham Sanpham { get; set; }
-        public int SL { get; set; }
+        public int? SL { get; set; }
     }
 }

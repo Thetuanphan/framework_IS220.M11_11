@@ -82,7 +82,7 @@
                                                 <tbody>
                                                     @foreach (var item in Model)
                                                     {
-                                                        decimal thanhtien = item.SL * (decimal)item.Sanpham.Dongia;
+                                                        decimal thanhtien = (decimal)item.SL * (decimal)item.Sanpham.Dongia;
                                                         total += thanhtien;
                                                         <tr class="text-center">
                                                             <td class="product-remove"><a asp-action="RemoveCart" asp-route-id="@item.Sanpham.Masp"><span class="ion-ios-close"></span></a></td>
