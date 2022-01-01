@@ -50,13 +50,19 @@ CÀI ĐẶT CHƯƠNG TRÌNH WEB
 
 CÁC BƯỚC CHẠY FRONTEND / BACKEND
 B1: Clone project về máy.
+
 B2: Cài đặt cơ sở dữ liệu MySQl 8.0  
+
   + https://dev.mysql.com/downloads/mysql/
   + https://dev.mysql.com/downloads/workbench/
   Thông số: UserName: ‘root’; Password: ‘admin’( Hoặc vào file appsettings để đặt lại phù hợp với cấu hình)
+  
 B3: Chạy file LapTopMySQL_Finally.sql để tạo cơ sở dữ liệu.
+
 B4: Kiểm tra các gói Nuget, cài đặt lại nếu không có hoặc có lỗi
     Xóa thư mục .vs 
     Note: Microsoft.AspNetCore.Identity.UI ( cập nhật lên phiên bản 3.1.22) nếu bị lỗi UI.
+    
 B5: Chuyển IIS express thành Test để chạy
+
 B6: Chạy chương trình và trải nghiệm
