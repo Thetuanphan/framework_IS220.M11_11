@@ -139,32 +139,56 @@
                                         <div class="form-group">
                                             <input type="password" class="form-control form-control-user"
                                                    asp-for="Input.Password"
-                                                   id="exampleInputPassword" 
+                                                   id="exampleInputPassword"
                                                    placeholder="Mật khẩu">
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
                                                 <input type="checkbox" class="custom-control-input" id="customCheck">
                                                 <label class="custom-control-label" for="customCheck">
-                                                   Ghi nhớ
+                                                    Ghi nhớ
                                                 </label>
                                                 @*  <label asp-for="Input.RememberMe"  class="custom-control-label">
-                                                        <input asp-for="Input.RememberMe" class="custom-control-input"/>
-                                                        @Html.DisplayNameFor(m => m.Input.RememberMe)
-                                                    </label>*@
+                        <input asp-for="Input.RememberMe" class="custom-control-input"/>
+                        @Html.DisplayNameFor(m => m.Input.RememberMe)
+                    </label>*@
                                             </div>
                                         </div>
                                         <button class="btn btn-primary btn-user btn-block" type="submit">
                                             Đăng nhập
                                         </button>
                                         <hr>
-                                        <a href="index.html" class="btn btn-google btn-user btn-block">
+                                       @* <a href="index.html" class="btn btn-google btn-user btn-block">
                                             <i class="fab fa-google fa-fw"></i> Đăng nhập với Google
                                         </a>
                                         <a href="index.html" class="btn btn-facebook btn-user btn-block">
                                             <i class="fab fa-facebook-f fa-fw"></i> Đăng nhập với Facebook
-                                        </a>
+                                        </a>*@
                                     </form>
+                                    @{
+                                        if ((Model.ExternalLogins?.Count ?? 0) == 0)
+                                        {
+                                            <div>
+                                                <p>
+                                                    There are no external authentication services configured. See <a href="https://go.microsoft.com/fwlink/?LinkID=532715">this article</a>
+                                                    for details on setting up this ASP.NET application to support logging in via external services.
+                                                </p>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                                                <div>
+                                                    <p>
+                                                        @foreach (var provider in Model.ExternalLogins)
+                                                        {
+                                                        <button style="height: 50px; background: #927f7f;" type="submit" class="btn btn-google btn-user btn-block" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">Đăng nhập với Google</button>
+                                                        }
+                                                    </p>
+                                                </div>
+                                            </form>
+                                        }
+                                    }
                                     <hr>
                                     <div class="text-center">
                                         <a class="small" id="forgot-password" asp-page="./ForgotPassword">Quên mật khẩu?</a>
