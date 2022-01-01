@@ -103,27 +103,32 @@ namespace Test.Areas.Admin.Controllers
             return RedirectToAction("Index", new { trangthai = 0 });
         }
         
-        
-        public IActionResult ThongKePost()
+        public IActionResult ThongKe()
+        {
+
+            return View();
+        }
+        public IActionResult ThongKePost(int input_nam)
         {
             List<Sanpham> listTK = (from temp in (from hd in _context.Hoadon
-                                          join cthd in _context.Cthd on hd.Mahd equals cthd.Mahd
-                                          where hd.Ngayhd.Year == 2021
-                                          group cthd by cthd.Masp into grp
-                                          select new
-                                          {
-                                              MaSP = grp.Key,
-                                              Soluong = grp.Sum(cthd => cthd.Soluong)
-                                          })
-                            join sp in _context.Sanpham on temp.MaSP equals sp.Masp
-                            select new Sanpham
-                            {
-                                Tensp = sp.Tensp,
-                                Dongia = sp.Dongia,
-                                Soluong = temp.Soluong,
-                            }).ToList();
+                                                  join cthd in _context.Cthd on hd.Mahd equals cthd.Mahd
+                                                  where hd.Ngayhd.Year == input_nam
+                                                  group cthd by cthd.Masp into grp
+                                                  select new
+                                                  {
+                                                      MaSP = grp.Key,
+                                                      Soluong = grp.Sum(cthd => cthd.Soluong)
+                                                  })
+                                    join sp in _context.Sanpham on temp.MaSP equals sp.Masp
+                                    select new Sanpham
+                                    {
+                                        Tensp = sp.Tensp,
+                                        Dongia = sp.Dongia,
+                                        Soluong = temp.Soluong,
+                                    }).ToList();
             ViewBag.Date = DateTime.Now.ToString("dd/MM/yyyy");
             return View(listTK);
+            //return Content(input_nam.ToString());
         }
 
         //// GET: Admin/HoaDon/Create
