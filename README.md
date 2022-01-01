@@ -55,6 +55,7 @@ B2: Cài đặt cơ sở dữ liệu MySQl 8.0
 
   + https://dev.mysql.com/downloads/mysql/
   + https://dev.mysql.com/downloads/workbench/
+  
   Thông số: UserName: ‘root’; Password: ‘admin’( Hoặc vào file appsettings để đặt lại phù hợp với cấu hình)
   
 B3: Chạy file LapTopMySQL_Finally.sql để tạo cơ sở dữ liệu.
