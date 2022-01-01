@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +27,8 @@ namespace Test.Controllers
         private readonly ILogger<SanphamController> _logger;
 
         private readonly UserManager<AppUser> _userManager;
+
+        private readonly IEmailSender _sendMail;
 
         // Key lưu chuỗi json của Cart
         public const string CARTKEY = "cart";
@@ -57,11 +60,12 @@ namespace Test.Controllers
             string jsoncart = JsonConvert.SerializeObject(ls);
             session.SetString(CARTKEY, jsoncart);
         }
-        public SanphamController(LapTopContext context, IConfiguration config, UserManager<AppUser> userManager)
+        public SanphamController(LapTopContext context, IConfiguration config, UserManager<AppUser> userManager, IEmailSender sendMail)
         {
             _context = context;
             _configuration = config;
             _userManager = userManager;
+            _sendMail = sendMail;
         }
 
         private async Task<AppUser> GetCurrentUser()
@@ -411,18 +415,29 @@ namespace Test.Controllers
             }
             else
             {
-                tensp = tensp.Trim().ToLower();
-                string _tensp = "";
-                List<Sanpham> contextSP = lapTopContext.ToList();
-                foreach (Sanpham item in contextSP)
-                {
-                    _tensp = item.Tensp.Trim().ToLower();
-                    if (_tensp.Contains(tensp))
-                    {
-                        spList.Add(item);
-                    }
-
-                }
+                spList = _context.Sanpham.Where(sp => sp.Tensp.ToLower().Contains(tensp.ToLower())).Select(sp=> new Sanpham {
+                    Masp = sp.Masp,
+                    Manhinh = sp.Manhinh,
+                    Boxuly = sp.Boxuly,
+                    Ram = sp.Ram,
+                    Congketnoi = sp.Congketnoi,
+                    Danhmuc = sp.Danhmuc,
+                    Tensp = sp.Tensp,
+                    Soluong = sp.Soluong,
+                    Mausac = sp.Mausac,
+                    Ocung =sp.Ocung,
+                    Cardmanhinh = sp.Cardmanhinh,
+                    Dacbiet = sp.Dacbiet,
+                    Hdh = sp.Hdh,
+                    Thietke = sp.Thietke,
+                    KichthuocTrongluong = sp.KichthuocTrongluong,
+                    Webcam = sp.Webcam,
+                    Pin = sp.Pin,
+                    Ramat = sp.Ramat,
+                    Mota = sp.Mota,
+                    Dongia = sp.Dongia,
+                    Hinhanh = sp.Hinhanh,
+                }).ToList();
                 ViewBag.dmSP = _context.Danhmucsanpham.ToList();
             }
             return View(spList);
@@ -465,16 +480,26 @@ namespace Test.Controllers
                 .Where(p => p.Masp == id)
                 .FirstOrDefault();
 
+            var cart = GetCartItems();
+            var cartitem = cart.Find(p => p.Sanpham.Masp == id);
+
+
             if (sanpham == null)
                 return NotFound("Không có sản phẩm");
 
             // Xử lý đưa vào Cart ...
-            var cart = GetCartItems();
-            var cartitem = cart.Find(p => p.Sanpham.Masp == id);
             if (cartitem != null)
             {
-                cartitem.SL++;
-                Console.WriteLine("ok 1 ");
+                if (cartitem.SL + 1 > sanpham.Soluong)
+                {
+                    cartitem.SL = sanpham.Soluong;
+                    Console.WriteLine("cart bằng số lượng");
+                }
+                else
+                {
+                    cartitem.SL++;
+                    Console.WriteLine("ok 1 ");
+                }
             }
             else
             {            
@@ -484,7 +509,7 @@ namespace Test.Controllers
 
             // Lưu cart vào Session
             SaveCartSession(cart);
-
+            ViewData["Cart"] = "Thêm thành công!";
             // Chuyển đến trang hiện thị Cart
             return RedirectToAction(nameof(Cart));
         }
@@ -498,28 +523,52 @@ namespace Test.Controllers
                 .Where(p => p.Masp == id)
                 .FirstOrDefault();
 
-            if (sanpham == null)
-                return NotFound("Không có sản phẩm");
-
-            // Xử lý đưa vào Cart ...
             var cart = GetCartItems();
             var cartitem = cart.Find(p => p.Sanpham.Masp == id);
-            if (cartitem != null)
+
+            if (sanpham == null)
+                return NotFound("Không có sản phẩm");
+            if (sanpham.Soluong == 0)
             {
-                cartitem.SL+=quantity;
-                Console.WriteLine("ok 1 ");
+                return Redirect("/SanPham/ProducSingle");
             }
             else
             {
-                cart.Add(new GioHang() { SL = quantity, Sanpham = sanpham });
-                Console.WriteLine("ok 2");
+                //Kiểm tra số lượng thỏa mãn hay không
+                if (quantity > sanpham.Soluong)
+                {
+                    cartitem.SL = sanpham.Soluong;
+                    Console.WriteLine("quantity lớn hơn soluongsp");
+                }
+                else
+                {
+                    // Xử lý đưa vào Cart ...
+                    if (cartitem != null)
+                    {
+                        if (cartitem.SL + quantity > sanpham.Soluong)
+                        {
+                            cartitem.SL = sanpham.Soluong;
+                            Console.WriteLine("quantity + cart lớn hơn soluongsp");
+                        }
+                        else
+                        {
+                            cartitem.SL += quantity;
+                            Console.WriteLine("ok 1");
+                        }
+                    }
+                    else
+                    {
+                        cart.Add(new GioHang() { SL = quantity, Sanpham = sanpham });
+                        Console.WriteLine("ok 2");
+                    }
+                }
+
+                // Lưu cart vào Session
+                SaveCartSession(cart);
+
+                // Chuyển đến trang hiện thị Cart
+                return RedirectToAction(nameof(Cart));
             }
-
-            // Lưu cart vào Session
-            SaveCartSession(cart);
-
-            // Chuyển đến trang hiện thị Cart
-            return RedirectToAction(nameof(Cart));
         }
         /// xóa item trong cart
 
@@ -534,6 +583,7 @@ namespace Test.Controllers
             }
 
             SaveCartSession(cart);
+            ViewData["Cart"] = "Xóa thành công";
             return RedirectToAction(nameof(Cart));
         }
 
@@ -543,16 +593,28 @@ namespace Test.Controllers
             Console.WriteLine("Voupdate");
             Console.WriteLine("{0}", quantity);
             Console.WriteLine("{0}", id);
-            // Cập nhật Cart thay đổi số lượng quantity ...
+            Sanpham sp = _context.Sanpham.Find(id);
             var cart = GetCartItems();
             var cartitem = cart.Find(p => p.Sanpham.Masp == id);
-            if (cartitem != null)
+            if (quantity > sp.Soluong)
             {
-                cartitem.SL = quantity;
-                cart.Find(p => p.Sanpham.Masp == id).SL = cartitem.SL;
+                cartitem.SL = sp.Soluong;
+                ViewData["Cart"] = "Số lượng sản phẩm hiện tại không đủ";
             }
-            //Console.WriteLine("{0}", cart.Find(p => p.Sanpham.Masp == id).SL); 
+            else
+            {
+                // Cập nhật Cart thay đổi số lượng quantity ...
+               
+                if (cartitem != null)
+                {
+                    cartitem.SL = quantity;
+                    cart.Find(p => p.Sanpham.Masp == id).SL = cartitem.SL;
+                }
+                //Console.WriteLine("{0}", cart.Find(p => p.Sanpham.Masp == id).SL); 
+                //SaveCartSession(cart);
+            }
             SaveCartSession(cart);
+
             // Trả về mã thành công (không có nội dung gì - chỉ để Ajax gọi)
             return RedirectToAction(nameof(Cart));
         }
@@ -634,16 +696,76 @@ namespace Test.Controllers
                 _context.SaveChanges();
                 int lastID = hd.Mahd;
 
+              
+                // gửi mail thử
+                string subject = "ĐƠN ĐẶT HÀNG";
+                string body =  "LaptopStore xin gửi đến bạn thông tin đơn mua hàng" +
+                               " <br></br> <div style=\" width: 700px; \">" +
+                               " <div style =\"width: 95%; padding: 10px;\" > " +
+                               " <h4 style = \"text-align: center;\" > ĐƠN MUA HÀNG</h4>" +
+                               " <p> Ngày mua: " + hd.Ngayhd + "</p>" +
+                               " <p> Họ tên: " + hoten + " </p> " +
+                               " <p> SĐT: " + sdt + "</p>" +
+                               " <p> Địa chỉ nhận hàng:  " + diachi + "</p>" +
+
+                               " <h4 style = \"text-align: center;\" > CHI TIẾT ĐƠN HÀNG </h4> " +
+                               "<table  style=\"width: 100%; border: 1px solid black; border-collapse: collapse; \"> " +
+                                     " <tr style = \" border:1px solid black; border-collapse: collapse;background-color: #fff200;color: #5f5f5f;\" > " +
+                                     " <th style = \" border:1px solid black; border-collapse: collapse;min-width:150px;\" > Sản phẩm </th>" +
+                                     " <th style = \" border:1px solid black; border-collapse: collapse;min-width:70px;\" > Số lượng </th> " +
+                                     " <th style = \" border:1px solid black; border-collapse: collapse;min-width:100px;\" > Đơn giá </th> " +
+                                     " <th style = \" border:1px solid black; border-collapse: collapse;min-width:100px;\" > Số tiền </th> " +
+                                     " </tr> ";
                 foreach (var item in cart)
                 {
                     Cthd ct = new Cthd();
                     ct.Mahd = lastID;
                     ct.Masp = item.Sanpham.Masp;
                     ct.Soluong = item.SL;
+                    long? tong = item.SL * item.Sanpham.Dongia;
                     _context.Add(ct);
                     _context.SaveChanges();
+
+                    // Cập nhật lại số lượng sản phẩm
+                    Sanpham sp = _context.Sanpham.Where(sp => sp.Masp == item.Sanpham.Masp).First();
+                    sp.Soluong -= item.SL;                  
+                    _context.SaveChanges();
+
+                    body = body +
+                             " <tr style = \" border:1px solid black; border-collapse: collapse; \"> " +
+                                     " <th style = \" border:1px solid black; border-collapse: collapse;\" > "  + item.Sanpham.Tensp + "</th>" +
+                                     " <th style = \" border:1px solid black; border-collapse: collapse;\" > " + item.SL + "</th>" +
+                                     " <th style = \" border:1px solid black; border-collapse: collapse;\" > " + item.Sanpham.Dongia + "</th>" +
+                                     " <th style = \" border:1px solid black; border-collapse: collapse;\" > " + tong + "</th>" +
+                             " </tr> ";
                 }
                 Console.WriteLine("vô rồi đó");
+
+                body = body +
+                   " </table> " +
+                   " <p> </p>" +
+                   " <table style = \"text-align: center;  position:relative; left:70%; width:30%; border:1px solid black; border-collapse: collapse; \" > " +
+                        " <tr style = \" border:1px solid black;border-collapse: collapse;\" > " +
+                        "     <th style = \" border:1px solid black; border-collapse: collapse;\" > Thành tiền </th> " +
+                         "    <th style = \" border:1px solid black;\" > " + hd.Tongtien + " </th>" +
+                         " </tr> " +
+                         " <tr style = \" border:1px solid black;border-collapse: collapse;\" > "+
+                          "   <th style = \" border:1px solid black; border-collapse: collapse; \" > Giảm giá </th> " +
+                           "  <th style = \" border:1px solid black; \" > 0 </th> " +
+                          " </tr> " +
+                          " <tr style = \" border:1px solid black;border-collapse: collapse; background-color: #ff9100;color: white;line-height: 20px; \" > " +
+                            "   <th style = \" border:1px solid black; border-collapse: collapse;\" > Tổng tiền </th> " +
+                             "  <th style = \" border:1px solid black;\" >" + hd.Thanhtien + " </th> " +
+                          " </tr> " +
+                   " </table> " +
+                   " <p> Cảm ơn quý khách đã mua sắm tại LaptopStore, chúc quý khách một ngày vui vẻ! </p>" +
+                   " </div> " +
+                   " </div>";
+
+
+                    await _sendMail.SendEmailAsync(email, subject, body);
+
+                Console.WriteLine("gửi mail ok");
                 ClearCart();
                 RedirectToAction(nameof(Index));
             }
