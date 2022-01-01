@@ -16,7 +16,7 @@ User:
 
 Giới thiệu công nghệ mới đã sử dụng đồ án (Không nằm trong phạm vi môn học) (Nếu có):
 + Gửi email xác nhận đơn hàng đặt thành công
-+ Đăng nhập bằng Google / Facebook
++ Đăng nhập bằng Google
 
 GIỚI THIỆU THÀNH VIÊN NHÓM 
 | Họ Tên  | MSSV | FB | SĐT | Nhiệm Vụ | Hoàn Thành |
