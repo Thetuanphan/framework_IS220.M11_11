@@ -49,6 +49,7 @@ CÀI ĐẶT CHƯƠNG TRÌNH WEB
   - dotnet add package MimeKit
 
 CÁC BƯỚC CHẠY FRONTEND / BACKEND
+
 B1: Clone project về máy.
 
 B2: Cài đặt cơ sở dữ liệu MySQl 8.0  
