@@ -22,7 +22,7 @@ GIỚI THIỆU THÀNH VIÊN NHÓM
 | Họ Tên  | MSSV | FB | SĐT | Nhiệm Vụ | Hoàn Thành |
 | ------- | ---- | -- | --- | -------- | -----------|
 |Phan Thế Tuấn (Nhóm trưởng)	|19521081	|The Tuan Phan |+84949782585	|Xây dựng chung trang web, hỗ trợ code các chức năng	|100%|
-|Nguyễn Vũ Văn Đức	|1952	|Nguyễn Vũ Văn Đức |+84	|Trang đăng nhập, đăng ký	|100%|
+|Nguyễn Vũ Văn Đức	|19521381	|Nguyễn Vũ Văn Đức |+84766790335	|Trang đăng nhập, đăng ký	|100%|
 |Nguyễn Thị Ái Linh	|1952	|Nguyễn Linh |+84	|Trang sản phẩm, giỏ hàng	|100%|
 |Nguyễn Thị Hồng Hải	|1952	|Nguyễn Thị Hồng Hải |+84	|Trang admin, báo cáo	|100%|
 
