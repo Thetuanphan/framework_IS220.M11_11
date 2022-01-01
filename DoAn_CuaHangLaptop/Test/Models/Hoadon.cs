@@ -18,7 +18,7 @@ namespace Test.Models
         public string Makh { get; set; }
        // public string Manv { get; set; }
         public string Mask { get; set; }
-        public DateTime? Ngayhd { get; set; }
+        public DateTime Ngayhd { get; set; }
         public string Nguoinhan { get; set; }
         public string nhanvienmanv { get; set; }
         public string Sdt { get; set; }

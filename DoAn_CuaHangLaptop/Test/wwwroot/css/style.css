@@ -9306,10 +9306,12 @@ h1, h2, h3, h4, h5,
     .table tbody tr td.quantity {
       width: 20%; }
     .table tbody tr td.image-prod .img {
-      display: block;
-      width: 100px;
-      height: 150px;
-      margin: 0 auto; }
+        display: block;
+        width: 200px;
+        height: 115px;
+        margin: 0 auto;
+        object-fit: cover;
+    }
     .table tbody tr td.product-name {
       width: 30%; }
       .table tbody tr td.product-name h3 {
